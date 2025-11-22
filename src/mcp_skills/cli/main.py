@@ -63,31 +63,47 @@ def setup(project_dir: str, config: str, auto: bool) -> None:
 
 
 @cli.command()
-@click.option(
-    "--transport",
-    type=click.Choice(["stdio", "http"]),
-    default="stdio",
-    help="Transport protocol (stdio for Claude Code, http for web clients)",
-)
-@click.option("--port", type=int, default=8000, help="Port for HTTP transport")
-@click.option("--dev", is_flag=True, help="Development mode (auto-reload)")
-def serve(transport: str, port: int, dev: bool) -> None:
-    """Start the MCP server.
+@click.option("--dev", is_flag=True, help="Development mode")
+def mcp(dev: bool) -> None:
+    """Start MCP server for Claude Code integration.
 
-    Exposes skills to code assistants via Model Context Protocol.
+    Starts the FastMCP server using stdio transport, making skills
+    available to Claude Code via Model Context Protocol.
+
+    Usage:
+        mcp-skills mcp
+
+    The server will run in stdio mode and communicate with Claude Code.
     """
-    console.print(f"🚀 [bold green]Starting MCP server ({transport})...[/bold green]")
-
-    if transport == "http":
-        console.print(f"🌐 HTTP server on port {port}")
-    else:
-        console.print("📡 stdio transport (for Claude Code)")
+    console.print("🚀 [bold green]Starting MCP server for Claude Code...[/bold green]")
+    console.print("📡 stdio transport")
 
     if dev:
-        console.print("🔧 [yellow]Development mode - auto-reload enabled[/yellow]")
+        console.print("🔧 [yellow]Development mode enabled[/yellow]")
 
-    # TODO: Implement MCP server startup
-    console.print("\n[yellow]⚠️  Server implementation coming soon![/yellow]")
+    # Import and configure MCP server
+    from mcp_skills.mcp.server import main as mcp_main, configure_services
+
+    try:
+        # Initialize services (SkillManager, IndexingEngine, ToolchainDetector, RepositoryManager)
+        console.print("⚙️  Configuring services...")
+        configure_services()
+
+        console.print("✅ Services configured")
+        console.print("📡 stdio transport active")
+        console.print("🎯 Ready for Claude Code connection\n")
+
+        # Start FastMCP server (blocks until terminated)
+        mcp_main()
+    except KeyboardInterrupt:
+        console.print("\n[yellow]⚠️  Server stopped by user[/yellow]")
+        raise SystemExit(0)
+    except Exception as e:
+        console.print(f"\n[red]❌ Server failed to start: {e}[/red]")
+        import traceback
+        if dev:
+            traceback.print_exc()
+        raise SystemExit(1)
 
 
 @cli.command()
