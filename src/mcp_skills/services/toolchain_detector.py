@@ -250,11 +250,14 @@ class ToolchainDetector:
         - Directories: 0.2 each
         - Config files: 0.1 each
 
+        Scores are normalized to [0.0, 1.0] range by dividing by the theoretical
+        maximum score for each language (sum of all possible pattern weights).
+
         Args:
             project_dir: Path to project root
 
         Returns:
-            Dictionary mapping language name to confidence score (0.0-1.0+)
+            Dictionary mapping language name to normalized confidence score (0.0-1.0)
         """
         scores: dict[str, float] = {}
 
@@ -280,7 +283,17 @@ class ToolchainDetector:
             score *= patterns["priority"]
 
             if score > 0:
-                scores[language] = score
+                # Normalize by theoretical maximum to ensure score <= 1.0
+                # Theoretical max = (num_files * 0.4 + num_dirs * 0.2 + num_configs * 0.1) * priority
+                theoretical_max = (
+                    len(patterns["files"]) * 0.4
+                    + len(patterns["dirs"]) * 0.2
+                    + len(patterns["configs"]) * 0.1
+                ) * patterns["priority"]
+
+                # Normalize score to [0.0, 1.0] range
+                normalized_score = min(score / theoretical_max, 1.0) if theoretical_max > 0 else 0.0
+                scores[language] = normalized_score
 
         return scores
 

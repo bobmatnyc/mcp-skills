@@ -226,11 +226,15 @@ class TestLanguageDetection:
     def test_detect_python_project(
         self, detector: ToolchainDetector, temp_python_project: Path
     ) -> None:
-        """Test detection of Python as primary language."""
+        """Test detection of Python as primary language.
+
+        Note: Confidence is normalized to [0.0, 1.0] range. Python has many
+        possible markers (theoretical max 2.6), so normalized scores are lower.
+        """
         info = detector.detect(temp_python_project)
 
         assert info.primary_language == "Python"
-        assert info.confidence > 0.7
+        assert info.confidence > 0.4  # Normalized from raw score ~1.1
         assert isinstance(info.secondary_languages, list)
 
     def test_detect_typescript_project(
@@ -811,11 +815,18 @@ class TestConfidenceScoring:
     def test_confidence_high_for_clear_markers(
         self, detector: ToolchainDetector, temp_python_project: Path
     ) -> None:
-        """Test high confidence for project with many clear markers."""
+        """Test high confidence for project with many clear markers.
+
+        Confidence is now normalized to [0.0, 1.0] by dividing by theoretical max.
+        Python has many possible markers (4 files + 3 dirs + 4 configs = 2.6 theoretical max),
+        so actual scores are lower but still indicate strong detection.
+        """
         info = detector.detect(temp_python_project)
 
-        # Multiple Python markers should give high confidence
-        assert info.confidence >= 0.7
+        # Multiple Python markers should give reasonable confidence (normalized)
+        # Project has: pyproject.toml + requirements.txt + pytest.ini + __pycache__
+        # Raw score: 1.1, Normalized: 1.1/2.6 ≈ 0.42
+        assert info.confidence >= 0.4
 
     def test_confidence_low_for_minimal_markers(
         self, detector: ToolchainDetector, tmp_path: Path
@@ -862,6 +873,9 @@ class TestConfidenceScoring:
         - Marker files: 0.4 each
         - Directories: 0.2 each
         - Config files: 0.1 each
+
+        Scores are normalized by theoretical maximum to ensure values stay in [0.0, 1.0].
+        Python theoretical max: (4*0.4 + 3*0.2 + 4*0.1) * 1.0 = 2.6
         """
         project_dir = tmp_path / "weighted_project"
         project_dir.mkdir()
@@ -871,12 +885,13 @@ class TestConfidenceScoring:
         (project_dir / "__pycache__").mkdir()  # 0.2 weight
         (project_dir / "pytest.ini").write_text("")  # 0.1 weight
 
-        # Expected score: 0.4 + 0.2 + 0.1 = 0.7 (with priority 1.0)
+        # Raw score: 0.4 + 0.2 + 0.1 = 0.7 (with priority 1.0)
+        # Normalized: 0.7 / 2.6 ≈ 0.269
         info = detector.detect(project_dir)
 
         assert info.primary_language == "Python"
-        # Confidence should be approximately 0.7
-        assert 0.65 <= info.confidence <= 0.75
+        # Confidence should be approximately 0.269 (normalized)
+        assert 0.25 <= info.confidence <= 0.30
 
 
 # =============================================================================
@@ -1187,12 +1202,16 @@ class TestIntegration:
     def test_full_python_project_detection(
         self, detector: ToolchainDetector, temp_python_project: Path
     ) -> None:
-        """Test complete detection flow for Python project."""
+        """Test complete detection flow for Python project.
+
+        Note: Confidence is normalized to [0.0, 1.0] range. Python has many
+        possible markers (theoretical max 2.6), so normalized scores are lower.
+        """
         info = detector.detect(temp_python_project)
 
         # Verify all fields are populated correctly
         assert info.primary_language == "Python"
-        assert info.confidence > 0.7
+        assert info.confidence > 0.4  # Normalized from raw score ~1.1
         assert len(info.frameworks) > 0
         assert len(info.build_tools) > 0
         assert len(info.package_managers) > 0
