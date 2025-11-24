@@ -19,6 +19,7 @@ from mcp_skills.models.repository import Repository
 from mcp_skills.services.agent_detector import AgentDetector
 from mcp_skills.services.agent_installer import AgentInstaller
 from mcp_skills.services.indexing import IndexingEngine
+from mcp_skills.services.prompt_enricher import PromptEnricher
 from mcp_skills.services.repository_manager import RepositoryManager
 from mcp_skills.services.skill_manager import SkillManager
 from mcp_skills.services.toolchain_detector import ToolchainDetector
@@ -1276,12 +1277,237 @@ def index(incremental: bool, force: bool) -> None:
 
 
 @cli.command()
-def config() -> None:
-    """Show current configuration."""
+@click.argument("prompt", nargs=-1, required=True)
+@click.option(
+    "--max-skills",
+    default=3,
+    type=int,
+    help="Maximum number of skills to include (default: 3)",
+)
+@click.option(
+    "--detailed",
+    is_flag=True,
+    help="Include full skill instructions (default: brief summaries)",
+)
+@click.option(
+    "--threshold",
+    default=0.7,
+    type=float,
+    help="Relevance threshold 0.0-1.0 (default: 0.7)",
+)
+@click.option(
+    "--output",
+    type=click.Path(),
+    help="Save enriched prompt to file",
+)
+@click.option(
+    "--copy",
+    is_flag=True,
+    help="Copy enriched prompt to clipboard (requires pyperclip)",
+)
+def enrich(
+    prompt: tuple[str, ...],
+    max_skills: int,
+    detailed: bool,
+    threshold: float,
+    output: str | None,
+    copy: bool,
+) -> None:
+    """Enrich a prompt with relevant skill instructions.
+
+    Automatically finds and injects relevant skill knowledge into your prompt
+    to provide better context for AI assistants.
+
+    The command extracts keywords from your prompt, searches for relevant skills,
+    and formats an enriched prompt with skill instructions.
+
+    Examples:
+
+        # Basic enrichment with top 3 skills
+        mcp-skillkit enrich "Create a REST API with authentication"
+
+        # Include more skills and full details
+        mcp-skillkit enrich "Write tests for user service" --max-skills 5 --detailed
+
+        # Save to file
+        mcp-skillkit enrich "Deploy to AWS" --output prompt.md
+
+        # Copy to clipboard
+        mcp-skillkit enrich "Optimize database queries" --copy
+
+        # Quoted prompts for complex sentences
+        mcp-skillkit enrich "Create a FastAPI endpoint that validates user input and returns JSON"
+    """
+    # Join prompt tuple into single string
+    prompt_text = " ".join(prompt)
+
+    console.print("🔍 [bold]Enriching prompt...[/bold]\n")
+    console.print(f"[dim]Prompt: {prompt_text}[/dim]\n")
+
+    try:
+        # Initialize services
+        skill_manager = SkillManager()
+        enricher = PromptEnricher(skill_manager)
+
+        # Step 1: Extract keywords
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Extracting keywords...", total=None)
+            keywords = enricher.extract_keywords(prompt_text)
+            progress.update(task, completed=True)
+
+        console.print(f"  [green]✓[/green] Extracted keywords: {', '.join(keywords[:5])}")
+        if len(keywords) > 5:
+            console.print(f"    [dim]... and {len(keywords) - 5} more[/dim]")
+
+        # Step 2: Search for skills
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Searching skills...", total=None)
+            skills = enricher.search_skills(keywords, max_skills, threshold)
+            progress.update(task, completed=True)
+
+        console.print(f"  [green]✓[/green] Found {len(skills)} relevant skill(s)")
+
+        if not skills:
+            console.print(
+                "\n[yellow]No relevant skills found. Try different keywords or lower the threshold.[/yellow]"
+            )
+            console.print("\nSuggestions:")
+            console.print("  • Use more specific technical terms")
+            console.print("  • Try --threshold 0.5 for broader results")
+            console.print("  • Run: mcp-skillkit search <keywords> to test")
+            return
+
+        # Step 3: Enrich prompt
+        with Progress(
+            SpinnerColumn(),
+            TextColumn("[progress.description]{task.description}"),
+            console=console,
+        ) as progress:
+            task = progress.add_task("Enriching prompt...", total=None)
+            result = enricher.enrich(
+                prompt_text, max_skills=max_skills, detailed=detailed, threshold=threshold
+            )
+            progress.update(task, completed=True)
+
+        console.print("  [green]✓[/green] Enrichment complete\n")
+
+        # Display enriched prompt
+        console.print("─" * 80)
+        console.print(result.enriched_text)
+        console.print("─" * 80)
+
+        # Handle output options
+        saved_to_file = False
+        copied_to_clipboard = False
+
+        if output:
+            try:
+                output_path = Path(output)
+                enricher.save_to_file(result.enriched_text, output_path)
+                console.print(f"\n[green]✓[/green] Saved to: {output_path}")
+                saved_to_file = True
+            except OSError as e:
+                console.print(f"\n[red]✗ Failed to save file: {e}[/red]")
+
+        if copy:
+            if enricher.copy_to_clipboard(result.enriched_text):
+                console.print("\n[green]✓[/green] Copied to clipboard")
+                copied_to_clipboard = True
+            else:
+                console.print(
+                    "\n[yellow]⚠ Clipboard copy failed (install pyperclip: pip install pyperclip)[/yellow]"
+                )
+
+        # Summary
+        console.print(
+            f"\n[dim]Enriched with {len(result.skills_found)} skill(s) "
+            f"({len(skills)} candidates, threshold: {threshold})[/dim]"
+        )
+        console.print(f"[dim]Keywords: {', '.join(result.keywords[:10])}[/dim]")
+
+        if not saved_to_file and not copied_to_clipboard:
+            console.print(
+                "\n[dim]Tip: Use --output FILE to save or --copy to clipboard[/dim]"
+            )
+
+    except Exception as e:
+        console.print(f"\n[red]Enrichment failed: {e}[/red]")
+        logger.exception("Enrichment failed")
+        raise SystemExit(1)
+
+
+@cli.command()
+@click.option(
+    "--show",
+    is_flag=True,
+    help="Display current configuration (read-only)",
+)
+@click.option(
+    "--set",
+    "set_value",
+    type=str,
+    help="Set configuration value (format: key=value)",
+)
+def config(show: bool, set_value: str | None) -> None:
+    """Configure mcp-skillkit settings interactively.
+
+    By default, opens an interactive menu for configuration.
+    Use --show to display current configuration (backward compatible).
+    Use --set to change values non-interactively.
+
+    Examples:
+        mcp-skillkit config                    # Interactive menu
+        mcp-skillkit config --show            # Display configuration
+        mcp-skillkit config --set base_dir=/custom/path
+        mcp-skillkit config --set search_mode=balanced
+    """
+    # Handle --set flag (non-interactive)
+    if set_value:
+        _handle_set_config(set_value)
+        return
+
+    # Handle --show flag (read-only display)
+    if show:
+        _display_configuration()
+        return
+
+    # Default: Interactive menu
+    try:
+        from mcp_skills.cli.config_menu import ConfigMenu
+
+        menu = ConfigMenu()
+        menu.run()
+
+    except KeyboardInterrupt:
+        console.print("\n[yellow]Configuration cancelled by user[/yellow]")
+        raise SystemExit(1)
+    except Exception as e:
+        console.print(f"\n[red]Configuration failed: {e}[/red]")
+        logger.exception("Configuration failed")
+        raise SystemExit(1)
+
+
+def _display_configuration() -> None:
+    """Display current configuration (--show flag).
+
+    This is the original config command behavior, preserved for
+    backward compatibility.
+    """
     console.print("⚙️  [bold]Current Configuration[/bold]\n")
 
     try:
-        base_dir = Path.home() / ".mcp-skillkit"
+        from mcp_skills.models.config import MCPSkillsConfig
+
+        config = MCPSkillsConfig()
+        base_dir = config.base_dir
 
         # Create configuration tree
         tree = Tree("[bold cyan]mcp-skillkit Configuration[/bold cyan]")
@@ -1290,7 +1516,7 @@ def config() -> None:
         base_node = tree.add(f"📁 Base Directory: [yellow]{base_dir}[/yellow]")
 
         # Repositories
-        repos_dir = base_dir / "repos"
+        repos_dir = config.repos_dir
         repos_node = base_node.add(f"📚 Repositories: [yellow]{repos_dir}[/yellow]")
 
         try:
@@ -1337,6 +1563,17 @@ def config() -> None:
         except Exception as e:
             graph_node.add(f"[red]Error: {e}[/red]")
 
+        # Hybrid search settings
+        search_node = base_node.add("⚖️  Hybrid Search")
+        preset = config.hybrid_search.preset or "custom"
+        search_node.add(f"[green]✓[/green] Mode: {preset}")
+        search_node.add(
+            f"[green]✓[/green] Vector weight: {config.hybrid_search.vector_weight:.1f}"
+        )
+        search_node.add(
+            f"[green]✓[/green] Graph weight: {config.hybrid_search.graph_weight:.1f}"
+        )
+
         # Metadata file
         metadata_file = base_dir / "repos.json"
         metadata_node = base_node.add(f"📄 Metadata: [yellow]{metadata_file}[/yellow]")
@@ -1357,6 +1594,88 @@ def config() -> None:
     except Exception as e:
         console.print(f"[red]Failed to display configuration: {e}[/red]")
         logger.exception("Config display failed")
+        raise SystemExit(1)
+
+
+def _handle_set_config(set_value: str) -> None:
+    """Handle --set flag for non-interactive configuration changes.
+
+    Args:
+        set_value: Configuration key=value pair
+
+    Supported keys:
+        - base_dir: Base directory path
+        - search_mode: Search mode preset (semantic_focused, graph_focused, balanced, current)
+    """
+    import yaml
+
+    try:
+        # Parse key=value
+        if "=" not in set_value:
+            console.print("[red]Invalid format. Use: key=value[/red]")
+            console.print("\nExamples:")
+            console.print("  --set base_dir=/custom/path")
+            console.print("  --set search_mode=balanced")
+            raise SystemExit(1)
+
+        key, value = set_value.split("=", 1)
+        key = key.strip()
+        value = value.strip()
+
+        # Load existing config
+        config_path = Path.home() / ".mcp-skillkit" / "config.yaml"
+        config_path.parent.mkdir(parents=True, exist_ok=True)
+
+        existing_config: dict = {}
+        if config_path.exists():
+            with open(config_path) as f:
+                existing_config = yaml.safe_load(f) or {}
+
+        # Handle different keys
+        if key == "base_dir":
+            base_path = Path(value).expanduser()
+            base_path.mkdir(parents=True, exist_ok=True)
+            existing_config["base_dir"] = str(base_path)
+            console.print(f"[green]✓[/green] Base directory set to: {base_path}")
+
+        elif key == "search_mode":
+            from mcp_skills.models.config import MCPSkillsConfig
+
+            # Validate preset
+            try:
+                preset_config = MCPSkillsConfig._get_preset(value)
+                existing_config["hybrid_search"] = {
+                    "preset": value,
+                    "vector_weight": preset_config.vector_weight,
+                    "graph_weight": preset_config.graph_weight,
+                }
+                console.print(
+                    f"[green]✓[/green] Search mode set to: {value} "
+                    f"(vector={preset_config.vector_weight:.1f}, "
+                    f"graph={preset_config.graph_weight:.1f})"
+                )
+            except ValueError as e:
+                console.print(f"[red]Invalid search mode: {e}[/red]")
+                raise SystemExit(1)
+
+        else:
+            console.print(f"[red]Unknown configuration key: {key}[/red]")
+            console.print("\nSupported keys:")
+            console.print("  • base_dir - Base directory path")
+            console.print("  • search_mode - Search mode preset")
+            raise SystemExit(1)
+
+        # Save updated config
+        with open(config_path, "w") as f:
+            yaml.dump(existing_config, f, default_flow_style=False, sort_keys=False)
+
+        console.print(f"\n[dim]Configuration saved to {config_path}[/dim]")
+
+    except SystemExit:
+        raise
+    except Exception as e:
+        console.print(f"[red]Failed to set configuration: {e}[/red]")
+        logger.exception("Config set failed")
         raise SystemExit(1)
 
 

@@ -55,6 +55,8 @@ dependencies = [
     # Utilities
     "python-frontmatter>=1.0.0",
     "watchdog>=3.0.0",
+    "questionary>=2.0.1",
+    "pyperclip>=1.8.2",
 ]
 
 [project.optional-dependencies]
