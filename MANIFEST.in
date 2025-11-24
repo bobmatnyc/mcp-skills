@@ -13,7 +13,7 @@ include src/mcp_skills/VERSION
 recursive-include completions *.bash *.zsh *.fish
 
 # Include configuration examples
-include .mcp-skills.yaml.example
+include .mcp-skillkit.yaml.example
 
 # Exclude development and cache files
 global-exclude *.pyc

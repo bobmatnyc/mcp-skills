@@ -1,32 +1,32 @@
 # Ticket 1M-156 Resolution: Installation Issues Fixed
 
-> **UPDATE (2025-11-24)**: This issue has been permanently resolved by renaming the package from `mcp-skillkit` to `mcp-skills` on PyPI. Package name now matches CLI command name. This document is kept for historical reference.
+> **UPDATE (2025-11-24)**: This issue has been permanently resolved by renaming the package from `mcp-skillkit` to `mcp-skillkit` on PyPI. Package name now matches CLI command name. This document is kept for historical reference.
 
 ## Executive Summary
 
-**Status**: ✅ RESOLVED (Package renamed to mcp-skills)
+**Status**: ✅ RESOLVED (Package renamed to mcp-skillkit)
 **Date**: 2025-11-23
 **Updated**: 2025-11-24
 **Ticket**: 1M-156
-**Issue**: Users running `pipx install mcp-skills` received error "No apps associated with package mcp-skills"
-**Resolution**: Package renamed from `mcp-skillkit` to `mcp-skills` for consistency
+**Issue**: Users running `pipx install mcp-skillkit` received error "No apps associated with package mcp-skillkit"
+**Resolution**: Package renamed from `mcp-skillkit` to `mcp-skillkit` for consistency
 
 ## Problem Analysis
 
 ### Root Cause
 The issue was **user confusion** between the package name and CLI command name:
 - **Package name on PyPI**: `mcp-skillkit`
-- **CLI command name**: `mcp-skills`
-- **User action**: Attempted `pipx install mcp-skills` (wrong)
+- **CLI command name**: `mcp-skillkit`
+- **User action**: Attempted `pipx install mcp-skillkit` (wrong)
 
-There is a different, unrelated package named `mcp-skills` on PyPI (not ours) that has no console scripts, which caused the confusing error message.
+There is a different, unrelated package named `mcp-skillkit` on PyPI (not ours) that has no console scripts, which caused the confusing error message.
 
 ### Why This Configuration Exists
 This is **intentional and correct**:
 - Package naming on PyPI often differs from CLI commands
-- The repository is `bobmatnyc/mcp-skills` (GitHub)
+- The repository is `bobmatnyc/mcp-skillkit` (GitHub)
 - The package is `mcp-skillkit` (PyPI - avoiding conflicts)
-- The CLI is `mcp-skills` (intuitive for users)
+- The CLI is `mcp-skillkit` (intuitive for users)
 
 This pattern is common in Python tooling:
 - `httpie` package → `http` command
@@ -38,7 +38,7 @@ This pattern is common in Python tooling:
 ### Changes Made
 
 #### 1. README.md - Enhanced Installation Section
-**Location**: `/Users/masa/Projects/mcp-skills/README.md`
+**Location**: `/Users/masa/Projects/mcp-skillkit/README.md`
 
 **Changes**:
 - Added pipx as recommended installation method
@@ -63,9 +63,9 @@ pip install mcp-skillkit
 pipx install mcp-skillkit
 ```
 
-**Note**: The package name on PyPI is `mcp-skillkit`, but the CLI command is `mcp-skills`:
+**Note**: The package name on PyPI is `mcp-skillkit`, but the CLI command is `mcp-skillkit`:
 - Install: `pipx install mcp-skillkit`
-- Run: `mcp-skills --help`
+- Run: `mcp-skillkit --help`
 
 ### With pip
 
@@ -77,34 +77,34 @@ pip install mcp-skillkit
 
 ### Troubleshooting Installation
 
-**Error: "No apps associated with package mcp-skills"**
+**Error: "No apps associated with package mcp-skillkit"**
 - You're trying to install the wrong package name
-- The correct package name is `mcp-skillkit` (not `mcp-skills`)
+- The correct package name is `mcp-skillkit` (not `mcp-skillkit`)
 - Install with: `pipx install mcp-skillkit`
 ```
 
 #### 2. docs/README.md - Updated Installation Instructions
-**Location**: `/Users/masa/Projects/mcp-skills/docs/README.md`
+**Location**: `/Users/masa/Projects/mcp-skillkit/docs/README.md`
 
 **Changes**:
 - Added pipx as recommended method
 - Added note about package name vs CLI command
 
 #### 3. PUBLISHING_CHECKLIST.md - Fixed Package Name
-**Location**: `/Users/masa/Projects/mcp-skills/PUBLISHING_CHECKLIST.md`
+**Location**: `/Users/masa/Projects/mcp-skillkit/PUBLISHING_CHECKLIST.md`
 
 **Changes**:
-- Fixed TestPyPI test command: `mcp-skills` → `mcp-skillkit`
+- Fixed TestPyPI test command: `mcp-skillkit` → `mcp-skillkit`
 - Updated metadata to clarify package name vs CLI command
 
 #### 4. docs/publishing.md - Fixed Package Name
-**Location**: `/Users/masa/Projects/mcp-skills/docs/publishing.md`
+**Location**: `/Users/masa/Projects/mcp-skillkit/docs/publishing.md`
 
 **Changes**:
-- Fixed TestPyPI test command: `mcp-skills` → `mcp-skillkit`
+- Fixed TestPyPI test command: `mcp-skillkit` → `mcp-skillkit`
 
 #### 5. Created Verification Documentation
-**Location**: `/Users/masa/Projects/mcp-skills/docs/INSTALLATION_VERIFICATION.md`
+**Location**: `/Users/masa/Projects/mcp-skillkit/docs/INSTALLATION_VERIFICATION.md`
 
 **Content**:
 - Comprehensive installation test results
@@ -119,11 +119,11 @@ pip install mcp-skillkit
 python3 -m venv /tmp/test-pip
 source /tmp/test-pip/bin/activate
 pip install mcp-skillkit
-which mcp-skills
-# Result: /tmp/test-pip/bin/mcp-skills
+which mcp-skillkit
+# Result: /tmp/test-pip/bin/mcp-skillkit
 
-mcp-skills --version
-# Result: mcp-skills, version 0.1.0
+mcp-skillkit --version
+# Result: mcp-skillkit, version 0.1.0
 ```
 
 ### Test 2: pipx Installation (Correct Package Name) ✅
@@ -132,24 +132,24 @@ pipx install mcp-skillkit
 # Output:
 #   installed package mcp-skillkit 0.1.0, installed using Python 3.13.7
 #   These apps are now globally available
-#     - mcp-skills
+#     - mcp-skillkit
 
-which mcp-skills
-# Result: /Users/masa/.local/bin/mcp-skills
+which mcp-skillkit
+# Result: /Users/masa/.local/bin/mcp-skillkit
 
-mcp-skills --version
-# Result: mcp-skills, version 0.1.0
+mcp-skillkit --version
+# Result: mcp-skillkit, version 0.1.0
 
 pipx list | grep mcp-skillkit
 # Result:
 #   package mcp-skillkit 0.1.0, installed using Python 3.13.7
-#     - mcp-skills
+#     - mcp-skillkit
 ```
 
 ### Test 3: pipx Installation (Wrong Package Name) ❌
 ```bash
-pipx install mcp-skills
-# Result: No apps associated with package mcp-skills
+pipx install mcp-skillkit
+# Result: No apps associated with package mcp-skillkit
 ```
 
 This confirms the exact error users were experiencing.
@@ -163,7 +163,7 @@ This confirms the exact error users were experiencing.
 name = "mcp-skillkit"
 
 [project.scripts]
-mcp-skills = "mcp_skills.cli.main:cli"
+mcp-skillkit = "mcp_skills.cli.main:cli"
 ```
 
 ### Entry Point Verification ✅
@@ -171,16 +171,16 @@ mcp-skills = "mcp_skills.cli.main:cli"
 pipx list | grep -A 3 mcp-skillkit
 # Output:
 #   package mcp-skillkit 0.1.0, installed using Python 3.13.7
-#     - mcp-skills
+#     - mcp-skillkit
 ```
 
 ### CLI Functionality Verification ✅
 ```bash
-mcp-skills --help
+mcp-skillkit --help
 # Output: Full help text with all commands
 
-mcp-skills --version
-# Output: mcp-skills, version 0.1.0
+mcp-skillkit --version
+# Output: mcp-skillkit, version 0.1.0
 ```
 
 ## Success Criteria
@@ -188,7 +188,7 @@ mcp-skills --version
 All criteria met:
 
 - ✅ pipx installation works without errors (`pipx install mcp-skillkit`)
-- ✅ CLI command `mcp-skills` is available after pipx install
+- ✅ CLI command `mcp-skillkit` is available after pipx install
 - ✅ Documentation updated with correct instructions
 - ✅ Both pip and pipx methods documented and tested
 - ✅ Troubleshooting section added for common error
@@ -241,7 +241,7 @@ All criteria met:
 ❌ **Renaming the package**: Would cause more problems than it solves
 - Current names are correct and follow best practices
 - Would require republishing and break existing installations
-- Package name `mcp-skills` is taken by a different project
+- Package name `mcp-skillkit` is taken by a different project
 
 ## Conclusion
 

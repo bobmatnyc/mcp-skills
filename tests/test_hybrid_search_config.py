@@ -13,7 +13,6 @@ from pathlib import Path
 from unittest.mock import MagicMock, patch
 
 import pytest
-import yaml
 
 from mcp_skills.models.config import HybridSearchConfig, MCPSkillsConfig
 from mcp_skills.services.indexing.engine import IndexingEngine
@@ -47,9 +46,7 @@ class TestHybridSearchConfig:
     def test_floating_point_tolerance(self):
         """Test that small floating point errors are tolerated."""
         # Should not raise due to floating point precision
-        config = HybridSearchConfig(
-            vector_weight=0.7, graph_weight=0.30000000000000004
-        )
+        config = HybridSearchConfig(vector_weight=0.7, graph_weight=0.30000000000000004)
         assert config.vector_weight == 0.7
         assert abs(config.graph_weight - 0.3) < 1e-6
 
@@ -92,7 +89,9 @@ class TestHybridSearchConfig:
 
         for preset in presets:
             total = preset.vector_weight + preset.graph_weight
-            assert abs(total - 1.0) < 1e-6, f"Preset {preset.preset} weights don't sum to 1.0"
+            assert (
+                abs(total - 1.0) < 1e-6
+            ), f"Preset {preset.preset} weights don't sum to 1.0"
 
 
 class TestMCPSkillsConfigYAMLLoading:
@@ -435,7 +434,10 @@ class TestCLIIntegration:
             # This should not raise
             preset_config = config._get_preset(preset_name)
             assert preset_config.preset == preset_name
-            assert abs(preset_config.vector_weight + preset_config.graph_weight - 1.0) < 1e-6
+            assert (
+                abs(preset_config.vector_weight + preset_config.graph_weight - 1.0)
+                < 1e-6
+            )
 
 
 class TestBackwardCompatibility:

@@ -1,9 +1,9 @@
 Shell completion is not supported for Bash versions older than 4.4.
-_mcp_skills_completion() {
+_mcp_skillkit_completion() {
     local IFS=$'\n'
     local response
 
-    response=$(env COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD=$COMP_CWORD _MCP_SKILLS_COMPLETE=bash_complete $1)
+    response=$(env COMP_WORDS="${COMP_WORDS[*]}" COMP_CWORD=$COMP_CWORD _MCP_SKILLKIT_COMPLETE=bash_complete $1)
 
     for completion in $response; do
         IFS=',' read type value <<< "$completion"
@@ -22,9 +22,9 @@ _mcp_skills_completion() {
     return 0
 }
 
-_mcp_skills_completion_setup() {
-    complete -o nosort -F _mcp_skills_completion mcp-skills
+_mcp_skillkit_completion_setup() {
+    complete -o nosort -F _mcp_skillkit_completion mcp-skillkit
 }
 
-_mcp_skills_completion_setup;
+_mcp_skillkit_completion_setup;
 

@@ -239,9 +239,7 @@ Content here"""
         assert "# Instructions" in instructions
         assert "Content here" in instructions
 
-    def test_split_frontmatter_no_frontmatter(
-        self, validator: SkillValidator
-    ) -> None:
+    def test_split_frontmatter_no_frontmatter(self, validator: SkillValidator) -> None:
         """Test content without frontmatter."""
         content = "# Just some content\n\nNo frontmatter here"
 
@@ -379,9 +377,7 @@ pytest
 
         assert len(examples) == 0
 
-    def test_extract_example_case_insensitive(
-        self, validator: SkillValidator
-    ) -> None:
+    def test_extract_example_case_insensitive(self, validator: SkillValidator) -> None:
         """Test Examples section is case-insensitive."""
         instructions = """# Skill
 

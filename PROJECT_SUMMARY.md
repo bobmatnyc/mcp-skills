@@ -1,13 +1,13 @@
 # MCP-Skills Project Summary
 
-**Project**: mcp-skills - Dynamic RAG-powered skills for code assistants via MCP
+**Project**: mcp-skillkit - Dynamic RAG-powered skills for code assistants via MCP
 **Created**: 2025-01-21
 **Status**: ✅ Initialized - Ready for implementation
 **Version**: 0.1.0
 
 ## Overview
 
-mcp-skills is a standalone Python PyPI package that provides intelligent, context-aware skills to code assistants via the Model Context Protocol (MCP). Unlike static skills loaded at startup, mcp-skills uses hybrid RAG (vector + knowledge graph) for runtime skill discovery, automatic recommendations, and dynamic loading.
+mcp-skillkit is a standalone Python PyPI package that provides intelligent, context-aware skills to code assistants via the Model Context Protocol (MCP). Unlike static skills loaded at startup, mcp-skillkit uses hybrid RAG (vector + knowledge graph) for runtime skill discovery, automatic recommendations, and dynamic loading.
 
 ## Project Statistics
 
@@ -20,7 +20,7 @@ mcp-skills is a standalone Python PyPI package that provides intelligent, contex
 ## Complete Project Structure
 
 ```
-/Users/masa/Projects/mcp-skills/
+/Users/masa/Projects/mcp-skillkit/
 ├── README.md                          # Comprehensive project documentation
 ├── CONTRIBUTING.md                    # Development guidelines
 ├── LICENSE                            # MIT License
@@ -82,7 +82,7 @@ mcp-skills is a standalone Python PyPI package that provides intelligent, contex
 
 ### 1. Python Package Setup ✅
 - **Modern packaging**: pyproject.toml with setuptools backend
-- **Entry point**: `mcp-skills` CLI command
+- **Entry point**: `mcp-skillkit` CLI command
 - **Version management**: Dynamic version from VERSION file
 - **Type hints**: Full type coverage with mypy strict mode
 - **PEP 561 compliance**: py.typed marker for type distribution
@@ -172,7 +172,7 @@ mcp-skills is a standalone Python PyPI package that provides intelligent, contex
 ### Install Package
 
 ```bash
-cd /Users/masa/Projects/mcp-skills
+cd /Users/masa/Projects/mcp-skillkit
 pip install -e ".[dev]"
 ```
 
@@ -184,8 +184,8 @@ python -m mcp_skills.cli.main --help
 python -m mcp_skills.cli.main setup --auto
 
 # Once installed in PATH
-mcp-skills --version
-mcp-skills setup
+mcp-skillkit --version
+mcp-skillkit setup
 ```
 
 ### Development Commands
@@ -306,7 +306,7 @@ MIT License - See LICENSE file
 
 ## Acknowledgments
 
-- Architecture design based on [mcp-skills-architecture.md](/Users/masa/Projects/claude-mpm/docs/research/mcp-skills-architecture.md)
+- Architecture design based on [mcp-skillkit-architecture.md](/Users/masa/Projects/claude-mpm/docs/research/mcp-skillkit-architecture.md)
 - Skills research from [skills-research.md](/Users/masa/Projects/claude-mpm/docs/research/skills-research.md)
 - Inspired by [Claude Skills](https://github.com/anthropics/skills)
 - Built on [Model Context Protocol](https://modelcontextprotocol.io)

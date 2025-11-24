@@ -1,6 +1,6 @@
-# mcp-skills Documentation
+# mcp-skillkit Documentation
 
-Comprehensive documentation for mcp-skills - dynamic RAG-powered skills for code assistants via MCP.
+Comprehensive documentation for mcp-skillkit - dynamic RAG-powered skills for code assistants via MCP.
 
 ## Quick Links
 
@@ -30,7 +30,7 @@ Complete catalog of skill repositories:
 - **Toolchain Skills**: Python, TypeScript, Rust, Go, Java
 - **Operations Skills**: CI/CD, cloud platforms, security, IaC
 - **MCP Servers**: Integration capabilities for skill-like functionality
-- **Integration Guide**: How to add repositories to mcp-skills
+- **Integration Guide**: How to add repositories to mcp-skillkit
 - **Verification Status**: Tracked status of all repositories
 
 ### Research
@@ -49,7 +49,7 @@ Detailed research covering:
 ## Documentation Index
 
 ### Getting Started
-1. [Installation](../README.md#installation) - Install mcp-skills from PyPI or source
+1. [Installation](../README.md#installation) - Install mcp-skillkit from PyPI or source
 2. [Quick Start](../README.md#quick-start) - Setup wizard and basic usage
 3. [Configuration](../README.md#configuration) - Global and project configuration
 
@@ -104,47 +104,47 @@ Detailed research covering:
 
 ## Common Tasks
 
-### Installing mcp-skills
+### Installing mcp-skillkit
 ```bash
 # Recommended: Use pipx for CLI applications
-pipx install mcp-skills
+pipx install mcp-skillkit
 
 # Alternative: Use pip
-pip install mcp-skills
+pip install mcp-skillkit
 ```
 
 ### Initial Setup
 ```bash
-mcp-skills setup
+mcp-skillkit setup
 ```
 
 ### Starting the Server
 ```bash
-mcp-skills serve
+mcp-skillkit serve
 ```
 
 ### Managing Repositories
 ```bash
 # Add a repository
-mcp-skills repo add https://github.com/anthropics/skills --priority 100
+mcp-skillkit repo add https://github.com/anthropics/skills --priority 100
 
 # List repositories
-mcp-skills repo list
+mcp-skillkit repo list
 
 # Update all repositories
-mcp-skills repo update
+mcp-skillkit repo update
 ```
 
 ### Searching Skills
 ```bash
 # Search for skills
-mcp-skills search "testing"
+mcp-skillkit search "testing"
 
 # Get skill details
-mcp-skills info pytest-skill
+mcp-skillkit info pytest-skill
 
 # Get recommendations
-mcp-skills recommend
+mcp-skillkit recommend
 ```
 
 ## Technology Stack
@@ -160,7 +160,7 @@ mcp-skills recommend
 ## Project Structure
 
 ```
-mcp-skills/
+mcp-skillkit/
 ├── docs/                      # Documentation
 │   ├── README.md             # This file
 │   ├── architecture/         # Architecture design
@@ -176,7 +176,7 @@ mcp-skills/
 ├── CONTRIBUTING.md           # Contributing guidelines
 └── PROJECT_SUMMARY.md        # Project summary
 
-~/.mcp-skills/                # User data directory
+~/.mcp-skillkit/                # User data directory
 ├── config.yaml               # User configuration
 ├── repos/                    # Cloned skill repositories
 │   ├── anthropics-skills/
@@ -190,8 +190,8 @@ mcp-skills/
 
 ## Support
 
-- **Issue Tracker**: [GitHub Issues](https://github.com/bobmatnyc/mcp-skills/issues)
-- **Documentation**: [GitHub Wiki](https://github.com/bobmatnyc/mcp-skills/wiki)
+- **Issue Tracker**: [GitHub Issues](https://github.com/bobmatnyc/mcp-skillkit/issues)
+- **Documentation**: [GitHub Wiki](https://github.com/bobmatnyc/mcp-skillkit/wiki)
 - **MCP Registry**: [Model Context Protocol](https://registry.modelcontextprotocol.io)
 
 ## Contributing
@@ -209,4 +209,4 @@ MIT License - see [LICENSE](../LICENSE) for details
 
 **Last Updated**: 2025-11-21
 **Status**: Early development - MVP in progress
-**Maintained by**: mcp-skills project
+**Maintained by**: mcp-skillkit project

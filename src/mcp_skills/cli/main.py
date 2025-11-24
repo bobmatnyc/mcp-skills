@@ -57,7 +57,7 @@ def setup(project_dir: str, config: str, auto: bool) -> None:
     4. Configure MCP server
     5. Validate setup
     """
-    console.print("🚀 [bold green]Starting mcp-skills setup...[/bold green]")
+    console.print("🚀 [bold green]Starting mcp-skillkit setup...[/bold green]")
     console.print(f"📁 Project directory: {project_dir}")
     console.print(f"⚙️  Config location: {config}\n")
 
@@ -273,7 +273,8 @@ def mcp(dev: bool) -> None:
 @click.option(
     "--search-mode",
     type=click.Choice(
-        ["semantic_focused", "graph_focused", "balanced", "current"], case_sensitive=False
+        ["semantic_focused", "graph_focused", "balanced", "current"],
+        case_sensitive=False,
     ),
     help="Hybrid search weighting preset (overrides config file)",
 )
@@ -533,7 +534,8 @@ def info(skill_id: str) -> None:
 @click.option(
     "--search-mode",
     type=click.Choice(
-        ["semantic_focused", "graph_focused", "balanced", "current"], case_sensitive=False
+        ["semantic_focused", "graph_focused", "balanced", "current"],
+        case_sensitive=False,
     ),
     help="Hybrid search weighting preset (overrides config file)",
 )

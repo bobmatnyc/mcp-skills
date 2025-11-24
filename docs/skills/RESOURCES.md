@@ -1,6 +1,6 @@
 # Skills Repository Resources
 
-Comprehensive index of skill repositories compatible with mcp-skills. This index is derived from extensive research documented in [skills-research.md](../research/skills-research.md).
+Comprehensive index of skill repositories compatible with mcp-skillkit. This index is derived from extensive research documented in [skills-research.md](../research/skills-research.md).
 
 ## Table of Contents
 
@@ -542,24 +542,24 @@ frameworks: [Flask, pytest, etc] (optional)
 
 ## Integration Guide
 
-### Adding a Repository to mcp-skills
+### Adding a Repository to mcp-skillkit
 
 **Command Line**:
 ```bash
 # Add a repository
-mcp-skills repo add https://github.com/anthropics/skills --priority 100
+mcp-skillkit repo add https://github.com/anthropics/skills --priority 100
 
 # Add with specific configuration
-mcp-skills repo add https://github.com/obra/superpowers --priority 90 --auto-update
+mcp-skillkit repo add https://github.com/obra/superpowers --priority 90 --auto-update
 
 # List all repositories
-mcp-skills repo list
+mcp-skillkit repo list
 
 # Update all repositories
-mcp-skills repo update
+mcp-skillkit repo update
 ```
 
-**Configuration File** (`~/.mcp-skills/config.yaml`):
+**Configuration File** (`~/.mcp-skillkit/config.yaml`):
 ```yaml
 repositories:
   - url: https://github.com/anthropics/skills.git
@@ -589,9 +589,9 @@ Collections are assigned priority levels for conflict resolution:
 
 ### Skill Discovery Process
 
-mcp-skills automatically discovers and indexes skills from all configured repositories:
+mcp-skillkit automatically discovers and indexes skills from all configured repositories:
 
-1. **Clone**: Git repositories cloned into `~/.mcp-skills/repos/{collection-name}/`
+1. **Clone**: Git repositories cloned into `~/.mcp-skillkit/repos/{collection-name}/`
 2. **Parse**: YAML frontmatter and markdown content extracted
 3. **Index**: Vector embeddings and knowledge graph relationships created
 4. **Serve**: Skills exposed via MCP protocol to code assistants
@@ -599,7 +599,7 @@ mcp-skills automatically discovers and indexes skills from all configured reposi
 
 ### Toolchain Detection
 
-mcp-skills automatically detects your project's toolchain:
+mcp-skillkit automatically detects your project's toolchain:
 
 - **Languages**: Python, TypeScript, JavaScript, Rust, Go, Java, etc.
 - **Frameworks**: Flask, Django, React, Next.js, etc.
@@ -664,7 +664,7 @@ Based on detection, relevant skills are automatically recommended.
 
 To propose a new skill collection:
 
-1. **Open an issue**: https://github.com/bobmatnyc/mcp-skills/issues
+1. **Open an issue**: https://github.com/bobmatnyc/mcp-skillkit/issues
 2. **Provide details**:
    - Repository URL
    - Skills count and categories
@@ -688,11 +688,11 @@ To propose a new skill collection:
 - **Skills Research**: [skills-research.md](../research/skills-research.md) - Comprehensive research on 69+ skills and repositories
 
 ### Architecture
-- **Architecture Documentation**: [architecture/README.md](../architecture/README.md) - Detailed mcp-skills architecture
+- **Architecture Documentation**: [architecture/README.md](../architecture/README.md) - Detailed mcp-skillkit architecture
 
 ---
 
 **Last Updated**: 2025-11-21
-**Maintained by**: mcp-skills project
-**Contribute**: https://github.com/bobmatnyc/mcp-skills
+**Maintained by**: mcp-skillkit project
+**Contribute**: https://github.com/bobmatnyc/mcp-skillkit
 **Research Source**: Based on [skills-research.md](../research/skills-research.md)

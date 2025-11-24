@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Local development runner for mcp-skills
+# Local development runner for mcp-skillkit
 # Run the package from source without installation
 
 set -e  # Exit on error

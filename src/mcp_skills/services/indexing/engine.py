@@ -157,7 +157,9 @@ class IndexingEngine:
                     graph_store=self.graph_store,
                     skill_manager=skill_manager,
                 )
-                logger.info("IndexingEngine initialized with default hybrid search weights")
+                logger.info(
+                    "IndexingEngine initialized with default hybrid search weights"
+                )
 
         except Exception as e:
             logger.error(f"Failed to initialize IndexingEngine: {e}")

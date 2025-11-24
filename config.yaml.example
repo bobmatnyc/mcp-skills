@@ -1,5 +1,5 @@
 # MCP Skills Configuration Example
-# Copy this file to ~/.mcp-skills/config.yaml and customize as needed
+# Copy this file to ~/.mcp-skillkit/config.yaml and customize as needed
 
 # Hybrid Search Configuration
 # Controls the weighting between vector similarity search and knowledge graph relationships
@@ -40,7 +40,7 @@ auto_recommend: true  # Automatically recommend skills on toolchain detection
 
 # Repository Configuration (optional)
 # repositories:
-#   - url: https://github.com/anthropics/mcp-skills-core
+#   - url: https://github.com/anthropics/mcp-skillkit-core
 #     priority: 90
 #     auto_update: true
 #   - url: https://github.com/your-org/custom-skills
@@ -72,11 +72,11 @@ auto_recommend: true  # Automatically recommend skills on toolchain detection
 # CLI Usage Examples:
 #
 # Use config file preset:
-#   mcp-skills search "python testing"
+#   mcp-skillkit search "python testing"
 #
 # Override with CLI flag:
-#   mcp-skills search "python testing" --search-mode semantic_focused
-#   mcp-skills recommend --search-mode graph_focused
+#   mcp-skillkit search "python testing" --search-mode semantic_focused
+#   mcp-skillkit recommend --search-mode graph_focused
 #
 # Available CLI flags:
 #   --search-mode semantic_focused  # 90% vector, 10% graph

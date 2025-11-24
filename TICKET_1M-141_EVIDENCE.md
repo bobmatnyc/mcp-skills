@@ -23,10 +23,10 @@
 
 ## Key Evidence Files
 
-1. **Test Report**: `/Users/masa/Projects/mcp-skills/TEST_REPORT_1M-141.md`
-2. **Comparison Script**: `/Users/masa/Projects/mcp-skills/test_mcp_comparison.py`
-3. **ChromaDB Location**: `/Users/masa/.mcp-skills/chromadb/` (2.2 MB)
-4. **Repositories**: `/Users/masa/.mcp-skills/repos/` (3 repositories)
+1. **Test Report**: `/Users/masa/Projects/mcp-skillkit/TEST_REPORT_1M-141.md`
+2. **Comparison Script**: `/Users/masa/Projects/mcp-skillkit/test_mcp_comparison.py`
+3. **ChromaDB Location**: `/Users/masa/.mcp-skillkit/chromadb/` (2.2 MB)
+4. **Repositories**: `/Users/masa/.mcp-skillkit/repos/` (3 repositories)
 
 ---
 
@@ -35,30 +35,30 @@
 ### Phase 1: Setup and Installation
 ```bash
 # Auto-discovery
-./mcp-skills-dev setup --auto
+./mcp-skillkit-dev setup --auto
 # Result: ✅ 49 skills indexed, Python/Pydantic/SQLAlchemy detected
 
 # Repository addition
-./mcp-skills-dev repo add https://github.com/bobmatnyc/mcp-skills.git
+./mcp-skillkit-dev repo add https://github.com/bobmatnyc/mcp-skillkit.git
 # Result: ✅ Repository cloned successfully
 
 # Indexing
-./mcp-skills-dev index
+./mcp-skillkit-dev index
 # Result: ✅ 49 skills, 98KB vector store, 952 graph edges
 ```
 
 ### Phase 2: Vector and Knowledge Graph
 ```bash
 # Vector search
-./mcp-skills-dev search "python testing" --limit 5
+./mcp-skillkit-dev search "python testing" --limit 5
 # Result: ✅ 5 results (webapp-testing score: 0.46)
 
 # Statistics
-./mcp-skills-dev stats
+./mcp-skillkit-dev stats
 # Result: ✅ 49 nodes, 952 edges, 69 total skills
 
 # Recommendations
-./mcp-skills-dev recommend
+./mcp-skillkit-dev recommend
 # Result: ✅ 10 recommendations based on project toolchain
 ```
 
@@ -167,8 +167,8 @@ python test_mcp_comparison.py
 | Test Report | TEST_REPORT_1M-141.md | Comprehensive test results |
 | Comparison Script | test_mcp_comparison.py | CLI vs MCP validation |
 | E2E Tests | tests/e2e/test_mcp_tools.py | MCP tool test suite |
-| ChromaDB | ~/.mcp-skills/chromadb/ | Vector store data |
-| Repositories | ~/.mcp-skills/repos/ | Skill repositories |
+| ChromaDB | ~/.mcp-skillkit/chromadb/ | Vector store data |
+| Repositories | ~/.mcp-skillkit/repos/ | Skill repositories |
 
 ---
 

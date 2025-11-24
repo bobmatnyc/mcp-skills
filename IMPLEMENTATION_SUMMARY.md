@@ -18,7 +18,7 @@ Successfully implemented configurable hybrid search weighting system that allows
 
 **Updated: `MCPSkillsConfig` class**
 - Added `hybrid_search: HybridSearchConfig` field with `current()` as default
-- Implemented YAML configuration loading from `~/.mcp-skills/config.yaml`
+- Implemented YAML configuration loading from `~/.mcp-skillkit/config.yaml`
 - Configuration priority: Explicit kwargs > Environment variables > Config file > Defaults
 - Added `_get_preset()` static method for preset name resolution
 - Supports multiple YAML formats:
@@ -186,31 +186,31 @@ python -m pytest tests/test_hybrid_search_config.py -v
 ### Test CLI functionality:
 ```bash
 # Use default config
-mcp-skills search "python testing"
+mcp-skillkit search "python testing"
 
 # Override with semantic-focused
-mcp-skills search "python testing" --search-mode semantic_focused
+mcp-skillkit search "python testing" --search-mode semantic_focused
 
 # Override recommendations
-mcp-skills recommend --search-mode graph_focused
+mcp-skillkit recommend --search-mode graph_focused
 
 # Test all presets
-mcp-skills search "test" --search-mode current
-mcp-skills search "test" --search-mode semantic_focused
-mcp-skills search "test" --search-mode graph_focused
-mcp-skills search "test" --search-mode balanced
+mcp-skillkit search "test" --search-mode current
+mcp-skillkit search "test" --search-mode semantic_focused
+mcp-skillkit search "test" --search-mode graph_focused
+mcp-skillkit search "test" --search-mode balanced
 ```
 
 ### Test YAML config:
 ```bash
 # Copy example config
-cp config.yaml.example ~/.mcp-skills/config.yaml
+cp config.yaml.example ~/.mcp-skillkit/config.yaml
 
 # Edit config to change preset
-vi ~/.mcp-skills/config.yaml
+vi ~/.mcp-skillkit/config.yaml
 
 # Run search (should use config preset)
-mcp-skills search "python testing"
+mcp-skillkit search "python testing"
 ```
 
 ## Code Quality Metrics

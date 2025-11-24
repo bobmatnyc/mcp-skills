@@ -1,4 +1,4 @@
-# PyPI Publishing Checklist - mcp-skills v0.1.0
+# PyPI Publishing Checklist - mcp-skillkit v0.1.0
 
 ## Pre-Publication Status ✅
 
@@ -6,7 +6,7 @@ All tasks completed and ready for PyPI publication!
 
 ### Files Updated/Created
 
-- [x] **pyproject.toml** - Updated with real GitHub URLs (bobmatnyc/mcp-skills)
+- [x] **pyproject.toml** - Updated with real GitHub URLs (bobmatnyc/mcp-skillkit)
 - [x] **CHANGELOG.md** - Created comprehensive v0.1.0 release notes
 - [x] **docs/publishing.md** - Complete PyPI publishing guide
 - [x] **README.md** - Added PyPI badges and updated status to "Production Ready"
@@ -52,11 +52,11 @@ twine upload --repository testpypi dist/*
 # Test installation in clean environment
 python3 -m venv test-env
 source test-env/bin/activate
-pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ mcp-skills
+pip install --index-url https://test.pypi.org/simple/ --extra-index-url https://pypi.org/simple/ mcp-skillkit
 
 # Verify functionality
-mcp-skills --version
-mcp-skills health
+mcp-skillkit --version
+mcp-skillkit health
 
 # Clean up
 deactivate
@@ -82,7 +82,7 @@ git tag -a v0.1.0 -m "Release version 0.1.0"
 git push origin v0.1.0
 
 # Create GitHub Release
-# Go to: https://github.com/bobmatnyc/mcp-skills/releases/new
+# Go to: https://github.com/bobmatnyc/mcp-skillkit/releases/new
 # - Tag: v0.1.0
 # - Title: v0.1.0 - Initial Release
 # - Description: Copy from CHANGELOG.md
@@ -118,12 +118,12 @@ git push origin main
 
 ### Metadata Verification
 
-- **Name**: mcp-skills (package name on PyPI)
-- **CLI Command**: mcp-skills (command line interface)
+- **Name**: mcp-skillkit (package name on PyPI)
+- **CLI Command**: mcp-skillkit (command line interface)
 - **Version**: 0.1.0
-- **Homepage**: https://github.com/bobmatnyc/mcp-skills
-- **Repository**: https://github.com/bobmatnyc/mcp-skills.git
-- **Issues**: https://github.com/bobmatnyc/mcp-skills/issues
+- **Homepage**: https://github.com/bobmatnyc/mcp-skillkit
+- **Repository**: https://github.com/bobmatnyc/mcp-skillkit.git
+- **Issues**: https://github.com/bobmatnyc/mcp-skillkit/issues
 - **License**: MIT
 - **Python Versions**: >=3.11
 - **Author**: MCP Skills Contributors
@@ -132,7 +132,7 @@ git push origin main
 
 ```bash
 # CLI entry point configured:
-mcp-skills = "mcp_skills.cli.main:cli"
+mcp-skillkit = "mcp_skills.cli.main:cli"
 ```
 
 ## Quality Metrics

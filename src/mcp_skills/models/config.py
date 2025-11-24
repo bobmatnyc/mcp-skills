@@ -8,6 +8,7 @@ import yaml
 from pydantic import Field, field_validator
 from pydantic_settings import BaseSettings
 
+
 logger = logging.getLogger(__name__)
 
 
