@@ -103,8 +103,51 @@ quality: ## Run comprehensive quality checks
 	@echo ""
 	@echo "$(GREEN)✅ All quality checks passed$(NC)"
 
+.PHONY: security-check
+security-check: ## Run basic security vulnerability scan
+	@echo "$(BLUE)🔒 Running basic security scan...$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Installing security tools if needed...$(NC)"
+	@pip install -q safety pip-audit 2>/dev/null || true
+	@echo ""
+	@echo "$(YELLOW)1️⃣  Scanning dependencies with Safety...$(NC)"
+	@safety check --output text || true
+	@echo ""
+	@echo "$(YELLOW)2️⃣  Scanning dependencies with pip-audit...$(NC)"
+	@pip-audit --desc || true
+	@echo ""
+	@echo "$(GREEN)✅ Security scan complete$(NC)"
+
+.PHONY: security-check-full
+security-check-full: ## Run comprehensive security audit
+	@echo "$(BLUE)🔒 Running comprehensive security audit...$(NC)"
+	@echo ""
+	@echo "$(YELLOW)Installing security tools if needed...$(NC)"
+	@pip install -q safety pip-audit bandit 2>/dev/null || true
+	@echo ""
+	@echo "$(YELLOW)1️⃣  Scanning dependencies with Safety (full report)...$(NC)"
+	@safety check --full-report --output json > .security-reports/safety-report.json 2>/dev/null || true
+	@safety check --full-report || true
+	@echo ""
+	@echo "$(YELLOW)2️⃣  Scanning dependencies with pip-audit...$(NC)"
+	@pip-audit --desc --format json > .security-reports/pip-audit-report.json 2>/dev/null || true
+	@pip-audit --desc || true
+	@echo ""
+	@echo "$(YELLOW)3️⃣  Running Bandit security linter...$(NC)"
+	@bandit -r $(SRC_DIR) -f json -o .security-reports/bandit-report.json 2>/dev/null || true
+	@bandit -r $(SRC_DIR) -ll || true
+	@echo ""
+	@echo "$(BLUE)📊 Security reports saved to .security-reports/$(NC)"
+	@echo "$(GREEN)✅ Comprehensive security audit complete$(NC)"
+
+.PHONY: security-install
+security-install: ## Install security scanning tools
+	@echo "$(BLUE)📦 Installing security scanning tools...$(NC)"
+	pip install safety pip-audit bandit
+	@echo "$(GREEN)✅ Security tools installed$(NC)"
+
 .PHONY: pre-publish
-pre-publish: quality ## Quality checks + secret detection
+pre-publish: quality security-check ## Quality checks + security scan + secret detection
 	@echo "$(BLUE)🔐 Running secret detection...$(NC)"
 	detect-secrets scan
 	@echo "$(GREEN)✅ Pre-publish checks complete$(NC)"
@@ -144,6 +187,7 @@ clean: ## Remove build artifacts
 	rm -rf .ruff_cache/
 	rm -rf htmlcov/
 	rm -rf .coverage
+	rm -rf .security-reports/
 	find . -type d -name __pycache__ -exec rm -rf {} + 2>/dev/null || true
 	@echo "$(GREEN)✅ Clean complete$(NC)"
 

@@ -1,0 +1,159 @@
+# Security Scanning Workflow for MCP Skills
+# Automated dependency vulnerability scanning using multiple tools
+# Runs on push, pull requests, and weekly schedule
+
+name: Security Scan
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  schedule:
+    # Run weekly security scan every Monday at 9:00 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch: # Allow manual triggering
+
+jobs:
+  security-scan:
+    name: Dependency Security Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      security-events: write # For GitHub Security tab integration
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install project dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e ".[dev]"
+
+      - name: Install security scanning tools
+        run: |
+          pip install safety pip-audit bandit
+
+      - name: Run Safety check
+        id: safety
+        continue-on-error: true
+        run: |
+          echo "Running Safety vulnerability scan..."
+          safety check --json > safety-report.json || true
+          safety check --output text || true
+
+      - name: Run pip-audit
+        id: pip-audit
+        continue-on-error: true
+        run: |
+          echo "Running pip-audit vulnerability scan..."
+          pip-audit --desc --format json > pip-audit-report.json || true
+          pip-audit --desc || true
+
+      - name: Run Bandit security linter
+        id: bandit
+        continue-on-error: true
+        run: |
+          echo "Running Bandit security linter..."
+          bandit -r src/mcp_skills -f json -o bandit-report.json || true
+          bandit -r src/mcp_skills -ll || true
+
+      - name: Upload Safety report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: safety-report
+          path: safety-report.json
+          retention-days: 30
+
+      - name: Upload pip-audit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pip-audit-report
+          path: pip-audit-report.json
+          retention-days: 30
+
+      - name: Upload Bandit report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: bandit-report
+          path: bandit-report.json
+          retention-days: 30
+
+      - name: Check for critical vulnerabilities
+        run: |
+          echo "Checking for critical vulnerabilities..."
+
+          # Parse Safety report for critical issues
+          if [ -f safety-report.json ]; then
+            CRITICAL=$(python -c "import json; data=json.load(open('safety-report.json')); print(len([v for v in data.get('vulnerabilities', []) if v.get('severity', '').lower() == 'critical']))" 2>/dev/null || echo "0")
+            echo "Safety: Found $CRITICAL critical vulnerabilities"
+            if [ "$CRITICAL" -gt "0" ]; then
+              echo "::warning::Found $CRITICAL critical vulnerabilities in Safety scan"
+            fi
+          fi
+
+          # Note: This workflow uses continue-on-error to report all issues
+          # In production, you may want to fail the build on critical vulnerabilities
+          echo "Security scan complete. Review artifacts for detailed reports."
+
+      - name: Security scan summary
+        if: always()
+        run: |
+          echo "## Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Tools Used" >> $GITHUB_STEP_SUMMARY
+          echo "- Safety: Python dependency vulnerability scanner" >> $GITHUB_STEP_SUMMARY
+          echo "- pip-audit: PyPI package vulnerability auditor" >> $GITHUB_STEP_SUMMARY
+          echo "- Bandit: Python code security linter" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Reports Available" >> $GITHUB_STEP_SUMMARY
+          echo "Download detailed reports from workflow artifacts." >> $GITHUB_STEP_SUMMARY
+
+  secret-scan:
+    name: Secret Detection Scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install detect-secrets
+        run: |
+          python -m pip install --upgrade pip
+          pip install detect-secrets
+
+      - name: Run detect-secrets scan
+        run: |
+          echo "Running secret detection scan..."
+          detect-secrets scan --baseline .secrets.baseline || true
+
+          # If no baseline exists, create one
+          if [ ! -f .secrets.baseline ]; then
+            detect-secrets scan > .secrets.baseline
+            echo "Created new secrets baseline"
+          fi
+
+      - name: Verify no new secrets
+        run: |
+          echo "Verifying no new secrets detected..."
+          detect-secrets scan --baseline .secrets.baseline || {
+            echo "::error::New secrets detected! Please review and update .secrets.baseline"
+            exit 1
+          }

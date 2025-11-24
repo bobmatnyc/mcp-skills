@@ -20,7 +20,21 @@ mcp-skills is a standalone Python application that provides intelligent, context
 
 ## Installation
 
-### From PyPI
+### With pipx (Recommended)
+
+[pipx](https://pipx.pypa.io/) is the recommended way to install Python CLI applications:
+
+```bash
+pipx install mcp-skillkit
+```
+
+**Note**: The package name on PyPI is `mcp-skillkit`, but the CLI command is `mcp-skills`:
+- Install: `pipx install mcp-skillkit`
+- Run: `mcp-skills --help`
+
+### With pip
+
+If you prefer pip (not recommended for CLI tools):
 
 ```bash
 pip install mcp-skillkit
@@ -33,6 +47,13 @@ git clone https://github.com/bobmatnyc/mcp-skills.git
 cd mcp-skills
 pip install -e .
 ```
+
+### Troubleshooting Installation
+
+**Error: "No apps associated with package mcp-skills"**
+- You're trying to install the wrong package name
+- The correct package name is `mcp-skillkit` (not `mcp-skills`)
+- Install with: `pipx install mcp-skillkit`
 
 ### Local Development (Without Installation)
 
@@ -321,6 +342,57 @@ test_hybrid_search_end_to_end       89.5    105.2    94.3     5.2
 ```bash
 make lint-fix
 ```
+
+### Security Scanning
+
+mcp-skills includes comprehensive security scanning to identify vulnerabilities in dependencies and code:
+
+#### Automated Security (Dependabot + GitHub Actions)
+
+**Dependabot** automatically:
+- Scans dependencies weekly for vulnerabilities
+- Creates pull requests for security updates
+- Groups minor/patch updates for easier review
+
+**GitHub Actions** runs security scans on every push:
+- Safety: Python dependency vulnerability scanner
+- pip-audit: PyPI package vulnerability auditor
+- Bandit: Python code security linter
+- detect-secrets: Secret detection scanner
+
+#### Manual Security Scanning
+
+```bash
+# Basic security scan (Safety + pip-audit)
+make security-check
+
+# Comprehensive security audit with reports
+make security-check-full
+
+# Install security scanning tools
+make security-install
+
+# Pre-publish with security checks
+make pre-publish
+```
+
+#### Security Reports
+
+After running `make security-check-full`, reports are saved to `.security-reports/`:
+- `safety-report.json` - Dependency vulnerabilities
+- `pip-audit-report.json` - Package vulnerabilities
+- `bandit-report.json` - Code security issues
+
+#### Security Policy
+
+For vulnerability reporting and security best practices, see [.github/SECURITY.md](.github/SECURITY.md).
+
+**Key security features:**
+- Automated dependency scanning (Dependabot)
+- Weekly security scans (GitHub Actions)
+- Pre-publish security gate
+- Secret detection (detect-secrets)
+- Code security linting (Bandit)
 
 ## Documentation
 

@@ -1,0 +1,68 @@
+# Dependabot Configuration for MCP Skills
+# Automated dependency vulnerability scanning and updates
+# https://docs.github.com/en/code-security/dependabot
+
+version: 2
+updates:
+  # Python dependencies (pip/pyproject.toml)
+  - package-ecosystem: "pip"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 5
+    reviewers:
+      - "bobmatnyc"
+    assignees:
+      - "bobmatnyc"
+    labels:
+      - "dependencies"
+      - "security"
+      - "automated"
+    commit-message:
+      prefix: "chore"
+      prefix-development: "chore(dev)"
+      include: "scope"
+    # Group minor and patch updates together
+    groups:
+      production-dependencies:
+        dependency-type: "production"
+        update-types:
+          - "minor"
+          - "patch"
+      development-dependencies:
+        dependency-type: "development"
+        update-types:
+          - "minor"
+          - "patch"
+    # Ignore specific dependencies if needed
+    ignore:
+      # Example: Pin chromadb to specific version
+      # - dependency-name: "chromadb"
+      #   versions: [">=0.5.0"]
+    # Enable security updates for all severities
+    allow:
+      - dependency-type: "all"
+    # Rebase strategy for PRs
+    rebase-strategy: "auto"
+
+  # GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
+    open-pull-requests-limit: 3
+    reviewers:
+      - "bobmatnyc"
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "automated"
+    commit-message:
+      prefix: "chore(ci)"
+      include: "scope"
