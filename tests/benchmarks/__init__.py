@@ -1,1 +1,1 @@
-"""Performance benchmarks for mcp-skills."""
+"""Performance benchmarks for mcp-skillkit."""

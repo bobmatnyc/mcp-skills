@@ -64,9 +64,9 @@ dmypy.json
 .secrets.baseline
 *.log
 
-# MCP Skills specific
-~/.mcp-skills/
-.mcp-skills.yaml
+# MCP SkillKit specific
+~/.mcp-skillkit/
+.mcp-skillkit.yaml
 
 # Added by Claude MPM /mpm-init
 $RECYCLE.BIN/

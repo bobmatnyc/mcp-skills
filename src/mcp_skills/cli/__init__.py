@@ -1,4 +1,4 @@
-"""CLI commands for mcp-skills."""
+"""CLI commands for mcp-skillkit."""
 
 from mcp_skills.cli.main import cli
 

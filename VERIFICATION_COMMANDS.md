@@ -30,7 +30,7 @@ ls -la completions/
 
 ```bash
 # Check all documentation references
-grep -r "mcp-skills[^-]" README.md docs/ --include="*.md" | wc -l
+grep -r "mcp-skillkit[^-]" README.md docs/ --include="*.md" | wc -l
 # Expected: 0 (all should be mcp-skillkit now)
 
 # Check pyproject.toml
@@ -42,7 +42,7 @@ grep "mcp-skillkit = " pyproject.toml
 
 # Verify dev script renamed
 ls -la | grep "mcp-skill.*-dev"
-# Expected: mcp-skillkit-dev (not mcp-skills-dev)
+# Expected: mcp-skillkit-dev
 
 # Check GitHub URLs
 grep "github.com/bobmatnyc" pyproject.toml
@@ -153,6 +153,6 @@ pytest tests/ -k "setup or cli" -v
 - ✅ All documentation uses `mcp-skillkit`
 - ✅ Shell completions work with `mcp-skillkit`
 - ✅ All tests pass
-- ✅ No references to `mcp-skills` command (only package/directory names)
+- ✅ No references to old `mcp-skills` package name
 - ✅ GitHub URLs point to `mcp-skillkit` repository
 - ✅ PyPI badges reference `mcp-skillkit`

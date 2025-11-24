@@ -30,7 +30,7 @@ class TestCLI:
         result = runner.invoke(cli, ["setup", "--project-dir", ".", "--auto"])
 
         assert result.exit_code == 0
-        assert "Starting mcp-skills setup" in result.output
+        assert "Starting mcp-skillkit setup" in result.output
 
     def test_serve_command(self) -> None:
         """Test serve command runs."""

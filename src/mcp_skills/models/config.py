@@ -195,18 +195,18 @@ class RepositoryConfig(BaseSettings):
 
 
 class MCPSkillsConfig(BaseSettings):
-    """Main mcp-skills configuration.
+    """Main mcp-skillkit configuration.
 
     Loads configuration from:
     1. Environment variables (MCP_SKILLS_*)
-    2. Config file (~/.mcp-skills/config.yaml)
+    2. Config file (~/.mcp-skillkit/config.yaml)
     3. Defaults
     """
 
     # Base directories
     base_dir: Path = Field(
-        default_factory=lambda: Path.home() / ".mcp-skills",
-        description="Base directory for mcp-skills",
+        default_factory=lambda: Path.home() / ".mcp-skillkit",
+        description="Base directory for mcp-skillkit",
     )
     repos_dir: Path | None = Field(None, description="Repositories directory")
     indices_dir: Path | None = Field(None, description="Indices directory")
@@ -250,11 +250,11 @@ class MCPSkillsConfig(BaseSettings):
         Configuration loading priority:
         1. Explicit kwargs (highest priority)
         2. Environment variables (MCP_SKILLS_*)
-        3. Config file (~/.mcp-skills/config.yaml)
+        3. Config file (~/.mcp-skillkit/config.yaml)
         4. Defaults (lowest priority)
         """
         # Load YAML config if not provided in kwargs
-        config_path = Path.home() / ".mcp-skills" / "config.yaml"
+        config_path = Path.home() / ".mcp-skillkit" / "config.yaml"
         yaml_config: dict[str, Any] = {}
 
         if config_path.exists() and "hybrid_search" not in kwargs:

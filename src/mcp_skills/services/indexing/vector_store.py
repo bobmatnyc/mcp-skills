@@ -56,13 +56,13 @@ class VectorStore:
 
         Args:
             persist_directory: Path to store ChromaDB data
-                             (defaults to ~/.mcp-skills/chromadb/)
+                             (defaults to ~/.mcp-skillkit/chromadb/)
 
         Raises:
             RuntimeError: If ChromaDB initialization fails
         """
         self.persist_directory = persist_directory or (
-            Path.home() / ".mcp-skills" / "chromadb"
+            Path.home() / ".mcp-skillkit" / "chromadb"
         )
 
         # Ensure storage directory exists

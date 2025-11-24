@@ -25,7 +25,7 @@ async def main():
     print()
 
     # Configure MCP services
-    base_dir = Path.home() / ".mcp-skills"
+    base_dir = Path.home() / ".mcp-skillkit"
     storage_dir = base_dir / "chromadb"
     configure_services(base_dir=base_dir, storage_path=storage_dir)
 
@@ -34,9 +34,9 @@ async def main():
     print("-" * 80)
 
     # CLI version
-    print("\n[CLI] Running: mcp-skills search 'python testing' --limit 3")
+    print("\n[CLI] Running: mcp-skillkit search 'python testing' --limit 3")
     cli_result = subprocess.run(
-        ["./mcp-skills-dev", "search", "python testing", "--limit", "3"],
+        ["./mcp-skillkit-dev", "search", "python testing", "--limit", "3"],
         capture_output=True,
         text=True,
     )
@@ -65,9 +65,9 @@ async def main():
     print("-" * 80)
 
     # CLI version
-    print("\n[CLI] Running: mcp-skills list (categories visible in output)")
+    print("\n[CLI] Running: mcp-skillkit list (categories visible in output)")
     cli_list = subprocess.run(
-        ["./mcp-skills-dev", "list"],
+        ["./mcp-skillkit-dev", "list"],
         capture_output=True,
         text=True,
     )
@@ -91,9 +91,9 @@ async def main():
     project_path = Path.cwd()
 
     # CLI version
-    print(f"\n[CLI] Running: mcp-skills recommend")
+    print(f"\n[CLI] Running: mcp-skillkit recommend")
     cli_rec = subprocess.run(
-        ["./mcp-skills-dev", "recommend"],
+        ["./mcp-skillkit-dev", "recommend"],
         capture_output=True,
         text=True,
         cwd=str(project_path),
@@ -127,9 +127,9 @@ async def main():
         skill_id = search_result['skills'][0]['id']
 
         # CLI version
-        print(f"\n[CLI] Running: mcp-skills info '{skill_id}'")
+        print(f"\n[CLI] Running: mcp-skillkit info '{skill_id}'")
         cli_info = subprocess.run(
-            ["./mcp-skills-dev", "info", skill_id],
+            ["./mcp-skillkit-dev", "info", skill_id],
             capture_output=True,
             text=True,
         )

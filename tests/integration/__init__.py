@@ -1,1 +1,1 @@
-"""Integration tests for mcp-skills workflows."""
+"""Integration tests for mcp-skillkit workflows."""

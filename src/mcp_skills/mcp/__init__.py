@@ -1,4 +1,4 @@
-"""MCP Server package for mcp-skills.
+"""MCP Server package for mcp-skillkit.
 
 This package provides the FastMCP server implementation for skill
 discovery, search, and recommendation via the Model Context Protocol (MCP).

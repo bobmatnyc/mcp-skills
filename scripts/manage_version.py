@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Version management script for mcp-skills.
+"""Version management script for mcp-skillkit.
 
 Handles version bumping and synchronization across VERSION files.
 """
@@ -73,7 +73,7 @@ def main() -> int:
     Returns:
         Exit code (0 for success)
     """
-    parser = argparse.ArgumentParser(description="Version management for mcp-skills")
+    parser = argparse.ArgumentParser(description="Version management for mcp-skillkit")
     parser.add_argument(
         "action",
         choices=["show", "bump", "set"],

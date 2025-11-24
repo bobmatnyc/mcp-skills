@@ -1,7 +1,7 @@
 """MCP tools for skill management.
 
 This package contains all MCP tool implementations for the
-mcp-skills server. Tools are automatically registered with
+mcp-skillkit server. Tools are automatically registered with
 FastMCP when imported.
 """
 

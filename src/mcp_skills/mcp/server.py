@@ -1,4 +1,4 @@
-"""FastMCP-based MCP server implementation for mcp-skills.
+"""FastMCP-based MCP server implementation for mcp-skillkit.
 
 This module implements the MCP server using the official FastMCP SDK,
 providing skill discovery, search, and recommendation via the Model
@@ -20,7 +20,7 @@ from ..services.toolchain_detector import ToolchainDetector
 
 
 # Initialize FastMCP server
-mcp = FastMCP("mcp-skills")
+mcp = FastMCP("mcp-skillkit")
 
 # Global service instances
 _skill_manager: SkillManager | None = None
@@ -42,7 +42,7 @@ def configure_services(
     services that will handle skill operations.
 
     Args:
-        base_dir: Base directory for mcp-skills data (default: ~/.mcp-skills)
+        base_dir: Base directory for mcp-skillkit data (default: ~/.mcp-skillkit)
         storage_path: Path for storage (ChromaDB, knowledge graph)
                      (default: {base_dir}/storage)
 
@@ -54,7 +54,7 @@ def configure_services(
 
     try:
         # Set default paths
-        base_dir = base_dir or Path.home() / ".mcp-skills"
+        base_dir = base_dir or Path.home() / ".mcp-skillkit"
         storage_path = storage_path or base_dir / "storage"
 
         # Ensure directories exist
@@ -70,7 +70,7 @@ def configure_services(
         )
         _toolchain_detector = ToolchainDetector()
 
-        logger.info(f"Configured mcp-skills services at {base_dir}")
+        logger.info(f"Configured mcp-skillkit services at {base_dir}")
     except Exception as e:
         logger.error(f"Failed to configure services: {e}")
         raise RuntimeError(f"Service configuration failed: {e}") from e
