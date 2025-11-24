@@ -10,7 +10,6 @@ import questionary
 import yaml
 from questionary import Choice
 from rich.console import Console
-from rich.panel import Panel
 from rich.tree import Tree
 
 from mcp_skills.models.config import HybridSearchConfig, MCPSkillsConfig
@@ -316,7 +315,7 @@ class ConfigMenu:
             repo_manager = RepositoryManager()
             repo = repo_manager.add_repository(url, priority=priority)
 
-            console.print(f"\n[green]✓[/green] Repository added successfully")
+            console.print("\n[green]✓[/green] Repository added successfully")
             console.print(f"  • ID: {repo.id}")
             console.print(f"  • Skills: {repo.skill_count}")
             console.print(f"  • Priority: {repo.priority}")

@@ -279,7 +279,7 @@ class PromptEnricher:
         return unique_keywords
 
     def search_skills(
-        self, keywords: list[str], max_skills: int = 3, threshold: float = 0.7
+        self, keywords: list[str], max_skills: int = 3
     ) -> list[Skill]:
         """Search for relevant skills using keywords.
 
@@ -288,7 +288,6 @@ class PromptEnricher:
         Args:
             keywords: List of extracted keywords
             max_skills: Maximum number of skills to return
-            threshold: Relevance threshold (not used by basic search)
 
         Returns:
             List of relevant Skill objects

@@ -317,13 +317,12 @@ def install(agent: str, dry_run: bool, force: bool) -> None:
         console.print()
 
         # Confirmation (unless --force or --dry-run)
-        if not force and not dry_run:
-            if not click.confirm(
-                f"Install mcp-skillkit for {len(found_agents)} agent(s)?",
-                default=True,
-            ):
-                console.print("[yellow]Installation cancelled[/yellow]")
-                return
+        if not force and not dry_run and not click.confirm(
+            f"Install mcp-skillkit for {len(found_agents)} agent(s)?",
+            default=True,
+        ):
+            console.print("[yellow]Installation cancelled[/yellow]")
+            return
 
         # Install for each agent
         console.print("[bold cyan]Step 2/3:[/bold cyan] Installing mcp-skillkit...")

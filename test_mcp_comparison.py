@@ -91,7 +91,7 @@ async def main():
     project_path = Path.cwd()
 
     # CLI version
-    print(f"\n[CLI] Running: mcp-skillkit recommend")
+    print("\n[CLI] Running: mcp-skillkit recommend")
     cli_rec = subprocess.run(
         ["./mcp-skillkit-dev", "recommend"],
         capture_output=True,

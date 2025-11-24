@@ -29,7 +29,6 @@ import os
 import platform
 from dataclasses import dataclass
 from pathlib import Path
-from typing import List
 
 
 @dataclass
@@ -170,7 +169,7 @@ class AgentDetector:
             exists=exists,
         )
 
-    def detect_all(self) -> List[DetectedAgent]:
+    def detect_all(self) -> list[DetectedAgent]:
         """Detect all configured AI agents.
 
         Returns:

@@ -36,7 +36,7 @@ import json
 import shutil
 from datetime import datetime
 from pathlib import Path
-from typing import Any, Dict, List
+from typing import Any
 
 from .agent_detector import DetectedAgent
 
@@ -186,7 +186,7 @@ class AgentInstaller:
 
             # Dry run: show what would happen
             if dry_run:
-                changes = self._describe_changes(config, agent)
+                changes = self._describe_changes(config)
                 return InstallResult(
                     success=True,
                     agent_name=agent.name,
@@ -241,7 +241,7 @@ class AgentInstaller:
                 )
 
             # Success
-            changes = self._describe_changes(config, agent)
+            changes = self._describe_changes(config)
             return InstallResult(
                 success=True,
                 agent_name=agent.name,
@@ -260,7 +260,7 @@ class AgentInstaller:
                 error=f"Unexpected error: {e}",
             )
 
-    def _load_config(self, config_path: Path) -> tuple[Dict[str, Any], str | None]:
+    def _load_config(self, config_path: Path) -> tuple[dict[str, Any], str | None]:
         """Load and parse JSON configuration file.
 
         Args:
@@ -272,7 +272,7 @@ class AgentInstaller:
             On failure: ({}, error_message)
         """
         try:
-            with open(config_path, "r", encoding="utf-8") as f:
+            with open(config_path, encoding="utf-8") as f:
                 config = json.load(f)
             return config, None
         except json.JSONDecodeError as e:
@@ -304,7 +304,7 @@ class AgentInstaller:
         except Exception as e:
             return None, str(e)
 
-    def _add_mcp_config(self, config: Dict[str, Any]) -> Dict[str, Any]:
+    def _add_mcp_config(self, config: dict[str, Any]) -> dict[str, Any]:
         """Add MCP SkillKit configuration to config dict.
 
         Args:
@@ -324,7 +324,7 @@ class AgentInstaller:
 
         return modified
 
-    def _validate_config(self, config: Dict[str, Any]) -> bool:
+    def _validate_config(self, config: dict[str, Any]) -> bool:
         """Validate configuration structure.
 
         Args:
@@ -367,7 +367,7 @@ class AgentInstaller:
             return False
 
     def _write_config(
-        self, config_path: Path, config: Dict[str, Any]
+        self, config_path: Path, config: dict[str, Any]
     ) -> str | None:
         """Write configuration to file with pretty formatting.
 
@@ -410,18 +410,17 @@ class AgentInstaller:
             # Log error but don't raise - rollback is best-effort
             print(f"Warning: Failed to restore backup: {e}")
 
-    def _describe_changes(self, original_config: Dict[str, Any], agent: DetectedAgent) -> str:
+    def _describe_changes(self, original_config: dict[str, Any]) -> str:
         """Describe what changes will be made to the configuration.
 
         Args:
             original_config: Original configuration dict
-            agent: Agent being configured
 
         Returns:
             Human-readable description of changes
         """
         if not original_config:
-            return f"Create new config file with MCP SkillKit configuration"
+            return "Create new config file with MCP SkillKit configuration"
 
         has_mcp = "mcpServers" in original_config
         has_skillkit = has_mcp and "mcp-skillkit" in original_config.get("mcpServers", {})

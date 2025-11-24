@@ -161,7 +161,7 @@ class TestSkillSearch:
         """Test that max_skills limits results."""
         mock_skill_manager.search_skills.return_value = sample_skills
 
-        skills = enricher.search_skills(["test"], max_skills=2)
+        enricher.search_skills(["test"], max_skills=2)
 
         mock_skill_manager.search_skills.assert_called_once_with("test", limit=2)
 

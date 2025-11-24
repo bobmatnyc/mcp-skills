@@ -9,7 +9,7 @@ import pytest
 import yaml
 
 from mcp_skills.cli.config_menu import ConfigMenu
-from mcp_skills.models.config import HybridSearchConfig, MCPSkillsConfig
+from mcp_skills.models.config import MCPSkillsConfig
 
 
 class TestConfigMenu:
