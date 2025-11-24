@@ -130,7 +130,7 @@ class AgentDetector:
                 print(f"Found {agent.name} at {agent.config_path}")
     """
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize agent detector with current platform."""
         self.platform = self._get_platform()
 

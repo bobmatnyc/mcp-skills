@@ -933,7 +933,9 @@ def health() -> None:
     console.print(
         "[yellow]Warning: 'health' is deprecated, use 'doctor' instead[/yellow]\n"
     )
-    doctor.callback()  # Invoke the doctor command
+    # Invoke the doctor command directly
+    ctx = click.get_current_context()
+    ctx.invoke(doctor)
 
 
 @cli.command()
@@ -1385,7 +1387,7 @@ def enrich(
             console=console,
         ) as progress:
             task = progress.add_task("Searching skills...", total=None)
-            skills = enricher.search_skills(keywords, max_skills, threshold)
+            skills = enricher.search_skills(keywords, max_skills)
             progress.update(task, completed=True)
 
         console.print(f"  [green]✓[/green] Found {len(skills)} relevant skill(s)")

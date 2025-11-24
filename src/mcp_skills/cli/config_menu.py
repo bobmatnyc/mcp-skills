@@ -253,6 +253,7 @@ class ConfigMenu:
             self.config.hybrid_search = HybridSearchConfig(
                 vector_weight=vector_weight,
                 graph_weight=graph_weight,
+                preset="custom",
             )
 
             console.print("\n[green]✓[/green] Custom weights saved")
@@ -430,7 +431,8 @@ class ConfigMenu:
             new_priority = int(priority_str)
 
             # Update priority
-            repo_manager.update_repository_priority(repo_id, new_priority)
+            repo.priority = new_priority
+            repo_manager.metadata_store.update_repository(repo)
             console.print(
                 f"\n[green]✓[/green] Priority updated for {repo_id}: "
                 f"{repo.priority} → {new_priority}"

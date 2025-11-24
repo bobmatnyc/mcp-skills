@@ -115,7 +115,7 @@ class AgentInstaller:
         "env": {},
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         """Initialize the agent installer."""
         pass
 

@@ -451,7 +451,7 @@ class PromptEnricher:
                 )
 
             # Step 2: Search for skills
-            skills = self.search_skills(keywords, max_skills, threshold)
+            skills = self.search_skills(keywords, max_skills)
 
             if not skills:
                 logger.info("No relevant skills found")
