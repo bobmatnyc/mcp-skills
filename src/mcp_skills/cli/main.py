@@ -1413,7 +1413,6 @@ def enrich(
                 prompt_text,
                 max_skills=max_skills,
                 detailed=detailed,
-                threshold=threshold,
             )
             progress.update(task, completed=True)
 
