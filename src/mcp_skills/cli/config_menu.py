@@ -485,7 +485,9 @@ class ConfigMenu:
                 stats = indexing_engine.get_stats()
 
                 if stats.total_skills > 0:
-                    vector_node.add(f"[green]✓[/green] {stats.total_skills} skills indexed")
+                    vector_node.add(
+                        f"[green]✓[/green] {stats.total_skills} skills indexed"
+                    )
                     vector_node.add(
                         f"[green]✓[/green] Size: {stats.vector_store_size // 1024} KB"
                     )

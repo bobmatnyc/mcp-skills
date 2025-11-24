@@ -43,16 +43,19 @@ from .agent_detector import DetectedAgent
 
 class ConfigError(Exception):
     """Base exception for configuration errors."""
+
     pass
 
 
 class BackupError(ConfigError):
     """Backup operation failed."""
+
     pass
 
 
 class ValidationError(ConfigError):
     """Configuration validation failed."""
+
     pass
 
 
@@ -366,9 +369,7 @@ class AgentInstaller:
         except Exception:
             return False
 
-    def _write_config(
-        self, config_path: Path, config: dict[str, Any]
-    ) -> str | None:
+    def _write_config(self, config_path: Path, config: dict[str, Any]) -> str | None:
         """Write configuration to file with pretty formatting.
 
         Args:
@@ -423,7 +424,9 @@ class AgentInstaller:
             return "Create new config file with MCP SkillKit configuration"
 
         has_mcp = "mcpServers" in original_config
-        has_skillkit = has_mcp and "mcp-skillkit" in original_config.get("mcpServers", {})
+        has_skillkit = has_mcp and "mcp-skillkit" in original_config.get(
+            "mcpServers", {}
+        )
 
         if has_skillkit:
             return "Update existing mcp-skillkit configuration"

@@ -278,9 +278,7 @@ class PromptEnricher:
         logger.debug(f"Extracted {len(unique_keywords)} keywords from prompt")
         return unique_keywords
 
-    def search_skills(
-        self, keywords: list[str], max_skills: int = 3
-    ) -> list[Skill]:
+    def search_skills(self, keywords: list[str], max_skills: int = 3) -> list[Skill]:
         """Search for relevant skills using keywords.
 
         Uses SkillManager.search_skills() with keyword-based query.

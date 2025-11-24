@@ -42,6 +42,7 @@ class AgentConfig:
         config_file: Name of the config file to modify
         config_key_path: JSON path to MCP servers configuration
     """
+
     name: str
     id: str
     config_paths: dict[str, Path]
@@ -59,6 +60,7 @@ class DetectedAgent:
         config_path: Absolute path to the configuration file
         exists: Whether the config file currently exists
     """
+
     name: str
     id: str
     config_path: Path
@@ -72,7 +74,11 @@ AGENT_CONFIGS = [
         id="claude-desktop",
         config_paths={
             "darwin": Path.home() / "Library" / "Application Support" / "Claude",
-            "win32": Path(os.environ.get("APPDATA", "")) / "Claude" if platform.system() == "Windows" else Path(),
+            "win32": (
+                Path(os.environ.get("APPDATA", "")) / "Claude"
+                if platform.system() == "Windows"
+                else Path()
+            ),
             "linux": Path.home() / ".config" / "Claude",
         },
         config_file="claude_desktop_config.json",
@@ -82,7 +88,11 @@ AGENT_CONFIGS = [
         id="claude-code",
         config_paths={
             "darwin": Path.home() / "Library" / "Application Support" / "Code" / "User",
-            "win32": Path(os.environ.get("APPDATA", "")) / "Code" / "User" if platform.system() == "Windows" else Path(),
+            "win32": (
+                Path(os.environ.get("APPDATA", "")) / "Code" / "User"
+                if platform.system() == "Windows"
+                else Path()
+            ),
             "linux": Path.home() / ".config" / "Code" / "User",
         },
         config_file="settings.json",
@@ -92,7 +102,11 @@ AGENT_CONFIGS = [
         id="auggie",
         config_paths={
             "darwin": Path.home() / "Library" / "Application Support" / "Auggie",
-            "win32": Path(os.environ.get("APPDATA", "")) / "Auggie" if platform.system() == "Windows" else Path(),
+            "win32": (
+                Path(os.environ.get("APPDATA", "")) / "Auggie"
+                if platform.system() == "Windows"
+                else Path()
+            ),
             "linux": Path.home() / ".config" / "Auggie",
         },
         config_file="config.json",

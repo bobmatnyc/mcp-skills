@@ -290,7 +290,9 @@ def install(agent: str, dry_run: bool, force: bool) -> None:
             console.print(f"[red]No agents found for: {agent}[/red]")
             console.print("\nSupported agents:")
             console.print("  • Claude Desktop - https://claude.ai/download")
-            console.print("  • Claude Code (VS Code) - Install from VS Code marketplace")
+            console.print(
+                "  • Claude Code (VS Code) - Install from VS Code marketplace"
+            )
             console.print("  • Auggie - https://auggie.app")
             return
 
@@ -311,15 +313,21 @@ def install(agent: str, dry_run: bool, force: bool) -> None:
                 console.print(f"  • {a.name}")
 
         if not found_agents:
-            console.print("\nPlease install an AI agent first, then run this command again.")
+            console.print(
+                "\nPlease install an AI agent first, then run this command again."
+            )
             return
 
         console.print()
 
         # Confirmation (unless --force or --dry-run)
-        if not force and not dry_run and not click.confirm(
-            f"Install mcp-skillkit for {len(found_agents)} agent(s)?",
-            default=True,
+        if (
+            not force
+            and not dry_run
+            and not click.confirm(
+                f"Install mcp-skillkit for {len(found_agents)} agent(s)?",
+                default=True,
+            )
         ):
             console.print("[yellow]Installation cancelled[/yellow]")
             return
@@ -350,7 +358,9 @@ def install(agent: str, dry_run: bool, force: bool) -> None:
         failed = [r for r in results if not r.success]
 
         if successful:
-            console.print(f"  [green]✓[/green] Successfully installed for {len(successful)} agent(s)")
+            console.print(
+                f"  [green]✓[/green] Successfully installed for {len(successful)} agent(s)"
+            )
 
         if failed:
             console.print(f"  [red]✗[/red] Failed for {len(failed)} agent(s)")
@@ -364,7 +374,9 @@ def install(agent: str, dry_run: bool, force: bool) -> None:
             console.print("  1. Restart your AI agent to load the new configuration")
             console.print("  2. The agent will automatically connect to mcp-skillkit")
             console.print("  3. Skills will be available through MCP tools\n")
-            console.print("[dim]Note: If using Claude Desktop, quit and restart the app completely.[/dim]")
+            console.print(
+                "[dim]Note: If using Claude Desktop, quit and restart the app completely.[/dim]"
+            )
         elif dry_run:
             console.print("[yellow]Dry run complete - no changes were made[/yellow]\n")
             console.print("Run without --dry-run to apply these changes.")
@@ -918,7 +930,9 @@ def doctor() -> None:
 @cli.command(name="health", hidden=True)
 def health() -> None:
     """Check system health and status (deprecated: use 'doctor' instead)."""
-    console.print("[yellow]Warning: 'health' is deprecated, use 'doctor' instead[/yellow]\n")
+    console.print(
+        "[yellow]Warning: 'health' is deprecated, use 'doctor' instead[/yellow]\n"
+    )
     doctor.callback()  # Invoke the doctor command
 
 
@@ -1358,7 +1372,9 @@ def enrich(
             keywords = enricher.extract_keywords(prompt_text)
             progress.update(task, completed=True)
 
-        console.print(f"  [green]✓[/green] Extracted keywords: {', '.join(keywords[:5])}")
+        console.print(
+            f"  [green]✓[/green] Extracted keywords: {', '.join(keywords[:5])}"
+        )
         if len(keywords) > 5:
             console.print(f"    [dim]... and {len(keywords) - 5} more[/dim]")
 
@@ -1392,7 +1408,10 @@ def enrich(
         ) as progress:
             task = progress.add_task("Enriching prompt...", total=None)
             result = enricher.enrich(
-                prompt_text, max_skills=max_skills, detailed=detailed, threshold=threshold
+                prompt_text,
+                max_skills=max_skills,
+                detailed=detailed,
+                threshold=threshold,
             )
             progress.update(task, completed=True)
 

@@ -353,11 +353,7 @@ class TestAgentInstaller:
 
     def test_describe_changes_update_existing(self, installer, temp_agent):
         """Test change description when updating existing mcp-skillkit."""
-        existing = {
-            "mcpServers": {
-                "mcp-skillkit": {"command": "old"}
-            }
-        }
+        existing = {"mcpServers": {"mcp-skillkit": {"command": "old"}}}
         description = installer._describe_changes(existing, temp_agent)
         assert "update" in description.lower()
 

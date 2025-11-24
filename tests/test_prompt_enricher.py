@@ -230,7 +230,9 @@ class TestPromptEnrichment:
         """Test successful prompt enrichment."""
         mock_skill_manager.search_skills.return_value = sample_skills[:2]
 
-        result = enricher.enrich("Create FastAPI endpoint with validation", max_skills=3)
+        result = enricher.enrich(
+            "Create FastAPI endpoint with validation", max_skills=3
+        )
 
         assert isinstance(result, EnrichedPrompt)
         assert result.original_prompt == "Create FastAPI endpoint with validation"
