@@ -512,7 +512,7 @@ class TestCLIConfigCommand:
         monkeypatch.setattr(main, "IndexingEngine", lambda **kwargs: indexing_engine)
         monkeypatch.setattr(main, "RepositoryManager", lambda **kwargs: repo_manager)
 
-        result = cli_runner.invoke(cli, ["config"])
+        result = cli_runner.invoke(cli, ["config", "--show"])
 
         assert result.exit_code == 0
         assert "Current Configuration" in result.output

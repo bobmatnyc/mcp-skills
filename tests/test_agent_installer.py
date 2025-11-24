@@ -342,19 +342,19 @@ class TestAgentInstaller:
 
     def test_describe_changes_new_config(self, installer, temp_agent):
         """Test change description for new config."""
-        description = installer._describe_changes({}, temp_agent)
+        description = installer._describe_changes({})
         assert "new config" in description.lower()
 
     def test_describe_changes_existing_config(self, installer, temp_agent):
         """Test change description for existing config."""
         existing = {"mcpServers": {"other": {}}}
-        description = installer._describe_changes(existing, temp_agent)
+        description = installer._describe_changes(existing)
         assert "add" in description.lower() or "mcp-skillkit" in description.lower()
 
     def test_describe_changes_update_existing(self, installer, temp_agent):
         """Test change description when updating existing mcp-skillkit."""
         existing = {"mcpServers": {"mcp-skillkit": {"command": "old"}}}
-        description = installer._describe_changes(existing, temp_agent)
+        description = installer._describe_changes(existing)
         assert "update" in description.lower()
 
 
