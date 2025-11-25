@@ -287,6 +287,15 @@ repositories:
   - url: https://github.com/anthropics/skills.git
     priority: 100
     auto_update: true
+  - url: https://github.com/obra/superpowers.git
+    priority: 90
+    auto_update: true
+  - url: https://github.com/ComposioHQ/awesome-claude-skills.git
+    priority: 85
+    auto_update: true
+  - url: https://github.com/Prat011/awesome-llm-skills.git
+    priority: 85
+    auto_update: true
 
 vector_store:
   backend: chromadb

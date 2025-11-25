@@ -45,6 +45,16 @@ class RepositoryManager:
             "license": "MIT",
         },
         {
+            "url": "https://github.com/ComposioHQ/awesome-claude-skills.git",
+            "priority": 85,
+            "license": "Apache-2.0",
+        },
+        {
+            "url": "https://github.com/Prat011/awesome-llm-skills.git",
+            "priority": 85,
+            "license": "Apache-2.0",
+        },
+        {
             "url": "https://github.com/bobmatnyc/claude-mpm-skills.git",
             "priority": 80,
             "license": "MIT",

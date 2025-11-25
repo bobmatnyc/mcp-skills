@@ -169,6 +169,7 @@ Comprehensive index of skill repositories compatible with mcp-skillset. This ind
 - **Repository**: https://github.com/ComposioHQ/awesome-claude-skills
 - **License**: Apache 2.0
 - **Status**: ✅ Active
+- **Priority**: 4
 
 **Highlights**:
 - Official document skills integration
@@ -176,6 +177,30 @@ Comprehensive index of skill repositories compatible with mcp-skillset. This ind
 - Security & forensics (computer forensics, threat hunting with Sigma rules, metadata extraction)
 - Integration with Composio platform (500+ apps)
 - Skills API documentation and examples
+
+### Prat011/awesome-llm-skills - Cross-Platform LLM Skills
+**Curated multi-platform skills compatible with Claude, Codex, Gemini CLI, and other AI agents**
+
+- **Repository**: https://github.com/Prat011/awesome-llm-skills
+- **License**: Apache 2.0 (framework), individual skills may vary
+- **Stars**: 114+
+- **Status**: ✅ Active
+- **Priority**: 4
+
+**Highlights**:
+- Cross-platform compatibility (Claude Code, Codex, Gemini CLI, etc.)
+- Comprehensive skill categories: document processing, development tools, business applications, creativity
+- Includes Notion integration skills (knowledge capture, meeting intelligence, research documentation)
+- MCP-focused skills (mcp-builder, skill-creator)
+- Production-ready skills with detailed setup instructions
+- Growing community collection with diverse use cases
+
+**Notable Skills**:
+- **Notion Integration**: notion-knowledge-capture, notion-meeting-intelligence, notion-spec-to-implementation
+- **Development**: mcp-builder, skill-creator, changelog-generator, webapp-testing
+- **Business**: brand-guidelines, competitive-ads-extractor, lead-research-assistant
+- **Creative**: algorithmic-art, canvas-design, image-enhancer, slack-gif-creator
+- **Productivity**: file-organizer, invoice-organizer, raffle-winner-picker
 
 ---
 
@@ -615,11 +640,12 @@ Based on detection, relevant skills are automatically recommended.
 |------------|--------------|----------|--------------|----------|
 | anthropics/skills | ~15 | ✅ | 2025-11 | 100 |
 | obra/superpowers | ~20 | ✅ | 2025-10 | 90 |
+| ComposioHQ/awesome-claude-skills | ~20 | ✅ | 2025-11 | 85 |
+| Prat011/awesome-llm-skills | ~20 | ✅ | 2025-11 | 85 |
 | bobmatnyc/claude-mpm-skills | ~69 | ✅ | 2025-11 | 80 |
 | alirezarezvani/claude-skills | 42 | ✅ | 2025-11 | 80 |
 | travisvn/awesome-claude-skills | Curated List | ✅ | 2025-11 | N/A |
 | BehiSecc/awesome-claude-skills | Curated List | ✅ | 2025 | N/A |
-| ComposioHQ/awesome-claude-skills | Varied | ✅ | 2025 | N/A |
 | K-Dense-AI/claude-scientific-skills | 84 | ⏳ | 2025 | 70 |
 | djacobsmeyer/claude-skills-engineering | ~10 | ⏳ | 2025-11 | 70 |
 | wshobson/agents | 85 agents | ✅ | 2025 | 70 |
