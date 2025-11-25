@@ -219,15 +219,15 @@ class MCPSkillsConfig(BaseSettings):
 
     # Component configurations
     vector_store: VectorStoreConfig = Field(
-        default_factory=VectorStoreConfig,  # type: ignore[arg-type]
+        default_factory=VectorStoreConfig,
         description="Vector store config",
     )
     knowledge_graph: KnowledgeGraphConfig = Field(
-        default_factory=KnowledgeGraphConfig,  # type: ignore[arg-type]
+        default_factory=KnowledgeGraphConfig,
         description="Knowledge graph config",
     )
     server: ServerConfig = Field(
-        default_factory=ServerConfig,  # type: ignore[arg-type]
+        default_factory=ServerConfig,
         description="Server config",
     )
     hybrid_search: HybridSearchConfig = Field(

@@ -108,7 +108,7 @@ class VectorStore:
             # Type ignore for ChromaDB's complex embedding function signature
             self.collection = self.chroma_client.get_or_create_collection(
                 name="skills",
-                embedding_function=embedding_fn,  # type: ignore[arg-type]
+                embedding_function=embedding_fn,
                 metadata={"description": "MCP Skills vector embeddings"},
             )
 

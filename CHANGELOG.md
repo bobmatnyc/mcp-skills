@@ -5,6 +5,39 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2025-11-24
+
+### Added
+
+#### Security Features
+- Multi-layer security validation system for skill loading
+- Prompt injection detection with threat classification (BLOCKED, DANGEROUS, SUSPICIOUS)
+- Repository trust levels (TRUSTED, VERIFIED, UNTRUSTED)
+- Content sanitization with skill boundary markers
+- Size limit enforcement for DoS prevention
+- Comprehensive security validator with regex pattern matching
+- SECURITY.md with complete threat model and security policy
+- Security test suite with 29 comprehensive tests
+
+#### CLI Commands
+- `show`: Alias for `info` command for improved user experience
+- `demo`: Interactive skill demonstration with auto-generated example prompts
+- Updated `setup` command to highlight new demo functionality
+
+#### Service Enhancements
+- SkillManager security integration with configurable validation
+- Verified repository management (add/remove trusted repos)
+- Fixed trust level detection for repository identification
+
+### Changed
+- Setup wizard now recommends `demo` command as first step
+- Skill loading now validates content security before use
+- README updated with security section and trust level documentation
+
+### Fixed
+- Fixed 15 SKILL.md files with validation errors
+- Corrected repository trust level matching
+
 ## [0.1.0] - 2025-11-23
 
 ### Added
@@ -116,4 +149,5 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ---
 
+[0.5.0]: https://github.com/bobmatnyc/mcp-skillset/releases/tag/v0.5.0
 [0.1.0]: https://github.com/bobmatnyc/mcp-skillset/releases/tag/v0.1.0

@@ -12,7 +12,12 @@ from mcp_skills.models.skill import (
     SkillMetadataModel,
     SkillModel,
 )
-from mcp_skills.services.validators import SkillValidator
+from mcp_skills.services.validators import (
+    SkillSecurityValidator,
+    SkillValidator,
+    ThreatLevel,
+    TrustLevel,
+)
 
 
 logger = logging.getLogger(__name__)
@@ -44,17 +49,32 @@ class SkillManager:
     # Predefined skill categories (maintained for backward compatibility)
     VALID_CATEGORIES = SkillValidator.VALID_CATEGORIES
 
-    def __init__(self, repos_dir: Path | None = None) -> None:
+    def __init__(
+        self, repos_dir: Path | None = None, enable_security: bool = True
+    ) -> None:
         """Initialize skill manager.
 
         Args:
             repos_dir: Directory containing skill repositories.
                       Defaults to ~/.mcp-skillset/repos/
+            enable_security: Enable security validation for skills (default: True)
         """
         self.repos_dir = repos_dir or Path.home() / ".mcp-skillset" / "repos"
         self._skill_cache: dict[str, Skill] = {}
         self._skill_paths: dict[str, Path] = {}  # Map skill_id -> file_path
         self.validator = SkillValidator()
+        self.enable_security = enable_security
+
+        # Trusted repositories (minimal security filtering)
+        self._trusted_repos = {
+            "anthropics",  # anthropics/skills
+            "bobmatnyc",  # bobmatnyc/claude-mpm-skills
+            "anthropics-skills",  # Legacy support
+            "claude-mpm-skills",  # Legacy support
+        }
+
+        # Verified community repositories (moderate filtering)
+        self._verified_repos: set[str] = set()  # Can be extended via configuration
 
     def discover_skills(self, repos_dir: Path | None = None) -> list[Skill]:
         """Scan repositories for skills.
@@ -121,13 +141,20 @@ class SkillManager:
         return discovered_skills
 
     def load_skill(self, skill_id: str) -> Skill | None:
-        """Load skill from disk with caching.
+        """Load skill from disk with caching and security validation.
+
+        Security Features:
+        1. Trust level detection based on repository
+        2. Prompt injection pattern detection
+        3. Suspicious content scanning
+        4. Size limit enforcement
+        5. Content sanitization with boundaries
 
         Args:
             skill_id: Unique skill identifier
 
         Returns:
-            Skill object or None if not found
+            Skill object or None if not found or blocked by security
 
         Performance:
         - Cache hit: O(1) dict lookup
@@ -156,6 +183,12 @@ class SkillManager:
 
             skill = self._parse_skill_file(skill_file, repo_id)
             if skill:
+                # Security validation before caching
+                if self.enable_security:
+                    skill = self._apply_security_validation(skill)
+                    if not skill:
+                        return None  # Blocked by security
+
                 self._skill_cache[skill_id] = skill
                 return skill
 
@@ -173,6 +206,12 @@ class SkillManager:
             if skill_file.exists():
                 skill = self._parse_skill_file(skill_file, repo_id)
                 if skill:
+                    # Security validation before caching
+                    if self.enable_security:
+                        skill = self._apply_security_validation(skill)
+                        if not skill:
+                            return None  # Blocked by security
+
                     self._skill_cache[skill_id] = skill
                     self._skill_paths[skill_id] = skill_file
                     return skill
@@ -554,3 +593,149 @@ class SkillManager:
         """
         # Delegate to validator
         return self.validator.extract_examples(instructions)
+
+    # Security-related private methods
+
+    def _get_trust_level(self, repo_id: str) -> TrustLevel:
+        """Determine trust level for a repository.
+
+        Trust Level Assignment:
+        - TRUSTED: Official Anthropic repositories
+        - VERIFIED: Known community repositories (configurable)
+        - UNTRUSTED: All other repositories (default)
+
+        Args:
+            repo_id: Repository identifier
+
+        Returns:
+            Trust level for security filtering
+
+        Example:
+            >>> manager._get_trust_level("anthropics-skills")
+            TrustLevel.TRUSTED
+            >>> manager._get_trust_level("unknown-repo")
+            TrustLevel.UNTRUSTED
+        """
+        if repo_id in self._trusted_repos:
+            return TrustLevel.TRUSTED
+        elif repo_id in self._verified_repos:
+            return TrustLevel.VERIFIED
+        else:
+            return TrustLevel.UNTRUSTED
+
+    def _apply_security_validation(self, skill: Skill) -> Skill | None:
+        """Apply security validation and sanitization to skill.
+
+        Security Workflow:
+        1. Determine repository trust level
+        2. Create security validator with trust level
+        3. Validate skill content for threats
+        4. Log violations and block if necessary
+        5. Sanitize content with boundaries
+        6. Return sanitized skill or None if blocked
+
+        Args:
+            skill: Skill object to validate
+
+        Returns:
+            Sanitized skill or None if blocked by security
+
+        Security Decision Logic:
+        - TRUSTED repos: Only block BLOCKED-level threats
+        - VERIFIED repos: Block BLOCKED and DANGEROUS threats
+        - UNTRUSTED repos: Block BLOCKED, DANGEROUS, and SUSPICIOUS threats
+
+        Example:
+            >>> skill = Skill(...)  # Skill with suspicious content
+            >>> validated = manager._apply_security_validation(skill)
+            >>> validated is None  # True if blocked
+        """
+        # Determine trust level
+        trust_level = self._get_trust_level(skill.repo_id)
+
+        # Create security validator
+        security_validator = SkillSecurityValidator(trust_level=trust_level)
+
+        # Validate skill content
+        is_safe, violations = security_validator.validate_skill(
+            instructions=skill.instructions,
+            description=skill.description,
+            skill_id=skill.id,
+        )
+
+        # Log violations
+        if violations:
+            # Group violations by threat level for logging
+            blocked = [v for v in violations if v.threat_level == ThreatLevel.BLOCKED]
+            dangerous = [
+                v for v in violations if v.threat_level == ThreatLevel.DANGEROUS
+            ]
+            suspicious = [
+                v for v in violations if v.threat_level == ThreatLevel.SUSPICIOUS
+            ]
+
+            if blocked:
+                logger.error(
+                    f"Skill {skill.id} BLOCKED - Critical security threats detected:\n"
+                    + "\n".join([f"  - {v.description}" for v in blocked])
+                )
+
+            if dangerous:
+                logger.warning(
+                    f"Skill {skill.id} contains DANGEROUS patterns:\n"
+                    + "\n".join([f"  - {v.description}" for v in dangerous])
+                )
+
+            if suspicious:
+                logger.info(
+                    f"Skill {skill.id} contains SUSPICIOUS content:\n"
+                    + "\n".join([f"  - {v.description}" for v in suspicious])
+                )
+
+        # Block if not safe
+        if not is_safe:
+            logger.error(
+                f"Skill {skill.id} blocked by security validation. "
+                f"Trust level: {trust_level.value}, "
+                f"Violations: {len(violations)}"
+            )
+            return None
+
+        # Sanitize content (wrap in boundaries)
+        skill.instructions = security_validator.sanitize_skill(
+            skill.instructions, skill.id
+        )
+
+        logger.debug(
+            f"Skill {skill.id} passed security validation ({trust_level.value})"
+        )
+        return skill
+
+    def add_verified_repo(self, repo_id: str) -> None:
+        """Add a repository to the verified trust list.
+
+        Verified repositories receive moderate security filtering
+        (block BLOCKED and DANGEROUS threats, allow SUSPICIOUS).
+
+        Args:
+            repo_id: Repository identifier to add
+
+        Example:
+            >>> manager.add_verified_repo("community/awesome-skills")
+        """
+        self._verified_repos.add(repo_id)
+        logger.info(f"Added {repo_id} to verified repositories")
+
+    def remove_verified_repo(self, repo_id: str) -> None:
+        """Remove a repository from the verified trust list.
+
+        Repository will revert to UNTRUSTED status.
+
+        Args:
+            repo_id: Repository identifier to remove
+
+        Example:
+            >>> manager.remove_verified_repo("community/awesome-skills")
+        """
+        self._verified_repos.discard(repo_id)
+        logger.info(f"Removed {repo_id} from verified repositories")

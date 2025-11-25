@@ -17,6 +17,39 @@ mcp-skillset is a standalone Python application that provides intelligent, conte
 - **📦 Multi-Source**: Pulls skills from multiple git repositories
 - **⚡ On-Demand Loading**: Skills loaded when needed, not all at startup
 - **🔌 MCP Native**: First-class Model Context Protocol integration
+- **🔒 Security First**: Multi-layer defense against prompt injection and malicious skills
+
+## Security
+
+MCP Skillset implements comprehensive security validation to protect against malicious skills from public repositories.
+
+### Security Features
+
+- **🛡️ Prompt Injection Detection**: Automatic detection of instruction override attempts, role hijacking, and context escape
+- **🔍 Threat Classification**: Multi-level threat detection (BLOCKED, DANGEROUS, SUSPICIOUS)
+- **🏷️ Repository Trust Levels**: TRUSTED (official), VERIFIED (community), UNTRUSTED (public)
+- **📏 Size Limits**: DoS prevention through content size enforcement
+- **🎯 Content Sanitization**: All skills wrapped in clear boundaries to prevent context escape
+
+### Trust Levels
+
+| Level | Description | Security Policy |
+|-------|-------------|-----------------|
+| **TRUSTED** | Official Anthropic repos | Minimal filtering (only BLOCKED threats) |
+| **VERIFIED** | Known community repos | Moderate filtering (BLOCKED + DANGEROUS) |
+| **UNTRUSTED** | Public repos (default) | Strict filtering (all threats) |
+
+### Quick Security Check
+
+```bash
+# Skills from public repos are automatically validated
+mcp-skillset search "python testing"
+
+# View security details in logs
+mcp-skillset --debug search "python testing"
+```
+
+For detailed security information, threat models, and best practices, see [SECURITY.md](./SECURITY.md).
 
 ## Installation
 
@@ -258,7 +291,10 @@ mcp-skillset serve --dev              # Development mode (auto-reload)
 mcp-skillset search "testing"         # Search skills
 mcp-skillset list                     # List all skills
 mcp-skillset info pytest-skill        # Show skill details
+mcp-skillset show <skill-id>          # Show skill details (alias for info)
 mcp-skillset recommend                # Get recommendations
+mcp-skillset demo                     # Interactive skill demo with menu
+mcp-skillset demo <skill-id>          # Generate example prompts for a skill
 
 # Repositories
 mcp-skillset repo add <url>           # Add repository
@@ -273,6 +309,21 @@ mcp-skillset index --incremental      # Index only new skills
 mcp-skillset doctor                   # System health check
 mcp-skillset stats                    # Usage statistics
 ```
+
+### Exploring Skills with Demo
+
+The `demo` command helps you discover skills and understand their usage:
+
+```bash
+# Browse all skills with interactive menu
+mcp-skillset demo
+
+# Generate example prompts for a specific skill
+mcp-skillset demo pytest-skill
+```
+
+The demo command automatically extracts key concepts from skill instructions
+and generates relevant example questions and use cases.
 
 ## Shell Completions
 
@@ -653,4 +704,4 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 ---
 
-**Status**: ✅ v0.1.0 - Production Ready | **Test Coverage**: 85-96% | **Tests**: 48 passing
+**Status**: ✅ v0.5.0 - Production Ready | **Test Coverage**: 85-96% | **Tests**: 77 passing (48 unit + 29 security)
