@@ -5,7 +5,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.6.5] - 2025-11-29
+
+### Added
+- **Progressive Skill Building**: Create custom skills with `build-skill` command
+- `build-skill` CLI command with interactive, preview, and standard modes
+- `skill_create` MCP tool for AI agent skill generation
+- `list_skill_templates` MCP tool for template discovery
+- SkillBuilder service with Jinja2 template engine
+- 4 specialized skill templates (base, web-development, api-development, testing)
+- Comprehensive validation (YAML, security, size limits)
+- Auto-deployment to `~/.claude/skills/`
+- Template-based skill generation with best practices
+- Security validation for skill content
+- Progressive loading support (metadata + full body)
+- Examples and documentation for skill building
+
+### Changed
+- Added `jinja2>=3.1.0` dependency for template rendering
+- Updated README with comprehensive skill building documentation
+- Enhanced MCP tools section with skill creation tools
+- Added Quick Reference entry for build-skill command
+
+### Fixed
+- Security validation now properly detects hardcoded credentials
+- Template rendering handles special characters correctly
+- CLI parameter validation improved
+
+### Security
+- Jinja2 autoescape consideration noted for future enhancement
+- Security pattern scanning active in SkillBuilder
+- No secrets detected in release (0 critical, 0 high vulnerabilities)
 
 ## [0.6.4] - 2025-11-29
 
