@@ -434,9 +434,7 @@ class TestClaudeCLIIntegration:
         assert "mcp-skillset" in add_call
 
     @patch("shutil.which")
-    def test_claude_cli_not_found(
-        self, mock_which, installer, claude_code_agent
-    ):
+    def test_claude_cli_not_found(self, mock_which, installer, claude_code_agent):
         """Test error when Claude CLI is not found.
 
         Verifies that installation fails with clear error message when
@@ -668,7 +666,13 @@ class TestClaudeCLIIntegration:
     @patch("subprocess.run")
     @patch("shutil.which")
     def test_claude_cli_routing_based_on_agent_id(
-        self, mock_which, mock_run, installer, claude_code_agent, claude_desktop_agent, tmp_path
+        self,
+        mock_which,
+        mock_run,
+        installer,
+        claude_code_agent,
+        claude_desktop_agent,
+        tmp_path,
     ):
         """Test that installation method is routed based on agent ID.
 

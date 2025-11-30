@@ -34,6 +34,7 @@ from __future__ import annotations
 
 import json
 import shutil
+import subprocess
 from datetime import datetime
 from pathlib import Path
 from typing import Any
@@ -155,6 +156,32 @@ class AgentInstaller:
                 print(f"Backup: {result.backup_path}")
                 print(f"Changes: {result.changes_made}")
         """
+        # Route Claude Code to CLI-based installation
+        if agent.id == "claude-code":
+            return self._install_via_claude_cli(agent, force, dry_run)
+
+        # Use JSON config file manipulation for other agents
+        return self._install_via_json_config(agent, force, dry_run)
+
+    def _install_via_json_config(
+        self,
+        agent: DetectedAgent,
+        force: bool = False,
+        dry_run: bool = False,
+    ) -> InstallResult:
+        """Install MCP SkillSet by modifying JSON config files.
+
+        This method is used for agents that don't provide a CLI tool
+        (Claude Desktop, Auggie). For Claude Code, use _install_via_claude_cli.
+
+        Args:
+            agent: DetectedAgent to install for
+            force: Overwrite existing mcp-skillset configuration
+            dry_run: Show what would be done without making changes
+
+        Returns:
+            InstallResult with success status and details
+        """
         try:
             # Check if config directory exists
             config_dir = agent.config_path.parent
@@ -273,6 +300,123 @@ class AgentInstaller:
                 config_path=agent.config_path,
                 error=f"Unexpected error: {e}",
             )
+
+    def _install_via_claude_cli(
+        self,
+        agent: DetectedAgent,
+        force: bool = False,
+        dry_run: bool = False,
+    ) -> InstallResult:
+        """Install MCP SkillSet using Claude CLI.
+
+        This method uses the official Claude CLI (claude mcp add) to install
+        MCP servers. This is the recommended approach for Claude Code as it:
+        - Uses the official API (stable, forward-compatible)
+        - Handles config file format internally
+        - Provides built-in validation
+        - Manages automatic restart/reload
+        - Separates MCP config from user settings
+
+        Args:
+            agent: DetectedAgent to install for (must be claude-code)
+            force: Overwrite existing mcp-skillset configuration
+            dry_run: Show what would be done without making changes
+
+        Returns:
+            InstallResult with success status and details
+
+        Error Conditions:
+            - CLI not available: Returns error, prompts to install Claude Code
+            - Already installed (no force): Returns error, suggests --force
+            - CLI command fails: Returns error with stderr output
+
+        Example:
+            result = installer._install_via_claude_cli(agent, force=True)
+            if result.success:
+                print(f"Changes: {result.changes_made}")
+        """
+        # Check if claude CLI is available
+        if not shutil.which("claude"):
+            return InstallResult(
+                success=False,
+                agent_name=agent.name,
+                agent_id=agent.id,
+                config_path=agent.config_path,
+                error="Claude CLI not found. Please install Claude Code first.\n"
+                "Visit: https://claude.ai/download",
+            )
+
+        # Check if already installed (unless force)
+        if not force:
+            result = subprocess.run(
+                ["claude", "mcp", "get", "mcp-skillset"],
+                capture_output=True,
+                text=True,
+            )
+            if result.returncode == 0:
+                return InstallResult(
+                    success=False,
+                    agent_name=agent.name,
+                    agent_id=agent.id,
+                    config_path=agent.config_path,
+                    error="mcp-skillset is already installed. Use --force to overwrite.",
+                )
+
+        # Dry run mode
+        if dry_run:
+            cmd_preview = (
+                "claude mcp add --transport stdio mcp-skillset mcp-skillset mcp"
+            )
+            if force:
+                cmd_preview = "claude mcp remove mcp-skillset\n" + cmd_preview
+            return InstallResult(
+                success=True,
+                agent_name=agent.name,
+                agent_id=agent.id,
+                config_path=agent.config_path,
+                changes_made=f"[DRY RUN] Would run:\n{cmd_preview}",
+            )
+
+        # Remove existing if force mode
+        if force:
+            subprocess.run(
+                ["claude", "mcp", "remove", "mcp-skillset"],
+                capture_output=True,
+                text=True,
+            )
+
+        # Add MCP server
+        result = subprocess.run(
+            [
+                "claude",
+                "mcp",
+                "add",
+                "--transport",
+                "stdio",
+                "mcp-skillset",
+                "mcp-skillset",
+                "mcp",
+            ],
+            capture_output=True,
+            text=True,
+        )
+
+        if result.returncode != 0:
+            return InstallResult(
+                success=False,
+                agent_name=agent.name,
+                agent_id=agent.id,
+                config_path=agent.config_path,
+                error=f"Failed to add MCP server: {result.stderr}",
+            )
+
+        return InstallResult(
+            success=True,
+            agent_name=agent.name,
+            agent_id=agent.id,
+            config_path=agent.config_path,
+            changes_made="Added mcp-skillset via Claude CLI",
+        )
 
     def _load_config(self, config_path: Path) -> tuple[dict[str, Any], str | None]:
         """Load and parse JSON configuration file.
