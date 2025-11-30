@@ -2,6 +2,12 @@
 
 from __future__ import annotations
 
+import os
+
+# Disable tokenizers parallelism to avoid fork warnings
+# Must be set before any HuggingFace tokenizers are loaded
+os.environ["TOKENIZERS_PARALLELISM"] = "false"
+
 import builtins
 import logging
 from datetime import UTC, datetime
