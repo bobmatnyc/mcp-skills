@@ -53,6 +53,11 @@ For detailed security information, threat models, and best practices, see [SECUR
 
 ## Installation
 
+### Prerequisites
+
+- Python 3.11 or higher
+- Claude Code (for Claude Code integration) with `claude` CLI available
+
 ### With Homebrew (macOS/Linux)
 
 The easiest way to install on macOS or Linux:
@@ -277,6 +282,8 @@ This complete one-command setup will:
 - Build vector + knowledge graph indices
 - Configure MCP server integration
 - **Install and configure for all detected AI agents** (Claude Desktop, Claude Code, Auggie)
+  - For Claude Code: Uses the official `claude mcp add` CLI command
+  - For other agents: Configures via JSON config files
 - Validate the setup
 
 **Tip**: Use `mcp-skillset setup --skip-agents` if you prefer to configure AI agents manually using the `install` command.
@@ -1512,6 +1519,46 @@ See [docs/skills/RESOURCES.md](docs/skills/RESOURCES.md) for a comprehensive ind
 - MCP servers that provide skill-like capabilities
 
 ## Troubleshooting
+
+### Claude CLI Integration
+
+#### "Claude CLI not found" error
+
+**Symptom**: Setup or installation fails with "Claude CLI not found" error.
+
+**Solutions**:
+
+1. **Verify Claude Code is installed**:
+   - Make sure Claude Code (VS Code extension) is installed and activated
+   - Check that the extension is up to date
+
+2. **Check if `claude` command is available**:
+   ```bash
+   which claude
+   ```
+   - If the command is not found, reinstall Claude Code
+   - On macOS, the CLI should be at: `/usr/local/bin/claude` or in your PATH
+
+3. **Add to PATH if necessary**:
+   ```bash
+   # Find where Claude CLI is installed
+   find /Applications -name "claude" 2>/dev/null
+
+   # Add to PATH in your shell profile (~/.zshrc, ~/.bashrc, etc.)
+   export PATH="/path/to/claude/bin:$PATH"
+   ```
+
+4. **Verify CLI is working**:
+   ```bash
+   claude --version
+   claude mcp list
+   ```
+
+5. **Fallback option**: Use `--skip-agents` flag and configure manually:
+   ```bash
+   mcp-skillset setup --skip-agents
+   # Then use: mcp-skillset install --agent claude-desktop
+   ```
 
 ### Model Download Issues
 

@@ -304,9 +304,17 @@ mcp-skillset setup --dry-run
 ✅ Integration Tests: 15/15 passing
 ✅ E2E Tests: 8/8 passing
 ✅ CLI Tests: All 11 commands functional
+✅ Claude CLI Integration: Manual testing passed
 ✅ Linting: Clean (ruff, mypy)
 ✅ Type Checking: No errors
 ```
+
+**Claude CLI Integration Testing**:
+- Test installation via CLI (`claude mcp add`)
+- Verify `claude mcp list` shows mcp-skillset after setup
+- Test force reinstall (`--force` flag)
+- Test dry-run mode (`--dry-run` flag)
+- Verify backward compatibility with JSON config for other agents
 
 ---
 
